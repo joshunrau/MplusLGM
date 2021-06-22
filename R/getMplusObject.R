@@ -205,16 +205,18 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   # If the model is a GBTM, fix  residual variance across time and classes
   if (model_type == 'GBTM') {
     restrict_gbtm <- glue::glue('{usevar[1]}-{usevar[length(usevar)]} (1);')
+  } else {
+    restrict_gbtm <- NULL
   }
   
   # If the model permits residual variance across time, but not class
   if (model_type == 'LCGA2') {
-    
     allow_rv_time <- c()
     for (i in 1:length(usevar)) {
       allow_rv_time <- c(allow_rv_time, glue::glue('{usevar[i]} ({i});'))
     }
-    
+  } else {
+    allow_rv_time <- NULL
   }
   
   # Specify class parameters 
