@@ -52,9 +52,11 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
             is.numeric(overall_polynomial), is.character(model_type))
     
   # Validate values of inputs (i.e., check for ValueError)
-  stopifnot(length(usevar) == length(timepoints), length(idvar) == 1,
-            between(classes, 1, 6), between(overall_polynomial, 1, 3),
-            model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3'))
+  stopifnot(
+    length(usevar) == length(timepoints), length(idvar) == 1,
+    dplyr::between(classes, 1, 6), dplyr::between(overall_polynomial, 1, 3),
+    model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3')
+    )
   
   # Create MplusObject with utility functions for each section of the input file
   model <- mplusObject(
