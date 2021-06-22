@@ -60,24 +60,24 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
       working_dir, model_type, overall_polynomial, classes)
     
     # Get name of the model
-    model_name <- str_remove(model[["TITLE"]], '\n')
+    model_name <-  stringr::str_remove(model[["TITLE"]], '\n')
     
     # Run model and add it to the list of models
-    list_log[[count_log]] <- mplusModeler(
-      model, glue('{model_dir}/{model_name}.dat'), 
-      glue('{model_dir}/{model_name}.inp'), run = 1,
+    list_log[[count_log]] <- MplusAutomation::mplusModeler(
+      model, glue::glue('{model_dir}/{model_name}.dat'), 
+      glue::glue('{model_dir}/{model_name}.inp'), run = 1,
       writeData = 'always', hashfilename = FALSE)
     
     # If  more than one model in list (i.e., starts != 500, check if replicated)
     if (starts != 500) {
       
       # Read the output file and find separator sentence
-      file <- readLines(glue('{model_dir}/{model_name}.out'))
+      file <- readLines(glue::glue('{model_dir}/{model_name}.out'))
       line <- grep("Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:", file)
       
       # Get the lines that contain the LL values, splitting the string into a vector of several strings
-      vector1 <- strsplit(file[line+2], " ")[[1]]
-      vector2 <- strsplit(file[line+3], " ")[[1]]
+      vector1 <- stringr::str_split(file[line+2], " ")[[1]]
+      vector2 <- stringr::str_split(file[line+3], " ")[[1]]
       
       # Get the LL values from these vectors
       LL1 <- vector1[12]
@@ -87,8 +87,8 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
       if (LL1 == LL2) {
         
         # Extract LL from MplusObjects
-        log_m1 <- SummaryTable(list_log[[count_log - 1]], keepCols = 'LL', sortBy = 'LL')
-        log_m2 <- SummaryTable(list_log[[count_log]], keepCols = 'LL', sortBy = 'LL')
+        log_m1 <- MplusAutomation::SummaryTable(list_log[[count_log - 1]], keepCols = 'LL', sortBy = 'LL')
+        log_m2 <- MplusAutomation::SummaryTable(list_log[[count_log]], keepCols = 'LL', sortBy = 'LL')
         
         # If these values are equal, return the last model run
         if (log_m1 == log_m2) {
@@ -110,8 +110,8 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
 .createModelDirectory <- function(working_dir, model_type, 
                                   overall_polynomial, classes) {
   
-  results_dir <- glue('{working_dir}/Results')
-  model_dir <- glue('{results_dir}/{model_type}/P={overall_polynomial}/K={classes}')
+  results_dir <- glue::glue('{working_dir}/Results')
+  model_dir <- glue::glue('{results_dir}/{model_type}/P={overall_polynomial}/K={classes}')
   if (!dir.exists(model_dir)) {
     dir.create(model_dir, recursive = TRUE)
   }
