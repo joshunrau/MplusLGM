@@ -4,6 +4,8 @@ An extension of the MplusAutomation package (https://github.com/michaelhallquist
 
 To Install:
 
-install.packages("devtools")
-library(devtools)
-devtools::install_github("joshunrau/MplusMixtures")
+  install.packages("devtools")
+  
+  library(devtools)
+  
+  devtools::install_github("joshunrau/MplusMixtures")
