@@ -12,13 +12,14 @@
 #' @export
 #' @import tidyverse
 #' @import glue
+#' @import ggplot2
 plotModel <- function(mplus_model, longvar_name = 'SANS', 
                       timevar_name = 'Month', figure_caption = 'default') {
 
   
   # Get the filepath of this model
   path_datafile <- mplus_model[["results"]][["input"]][["data"]][["file"]]
-  path_dir <- str_remove(path_datafile, ".dat")
+  path_dir <- stringr::str_remove(path_datafile, ".dat")
   path_gh5 <- paste0(path_dir, '.gh5')
   
   # Extract the estimated means to df
@@ -33,9 +34,9 @@ plotModel <- function(mplus_model, longvar_name = 'SANS',
   est_means$Class <- class_vars
   
   # Get the timepoints for the plot
-  plot_info_split <- str_split(mplus_model[["PLOT"]], "\n")[[1]]
+  plot_info_split <- stringr::str_split(mplus_model[["PLOT"]], "\n")[[1]]
   series_info <-  plot_info_split[[grep('SERIES', plot_info_split)]]
-  series_info_split <- str_split(series_info, ' ')[[1]]
+  series_info_split <- stringr::str_split(series_info, ' ')[[1]]
   
   list_timepoints <- c()
   for (i in series_info_split) {
@@ -53,7 +54,7 @@ plotModel <- function(mplus_model, longvar_name = 'SANS',
   
   # Shift to long
   est_means_long <- est_means %>% 
-    pivot_longer(cols = as.character(list_timepoints), 
+    tidyr::pivot_longer(cols = as.character(list_timepoints), 
                  names_to = 'Month', values_to = 'SANS') %>%
     mutate(Month = factor(as.numeric(Month)))
   est_means_long$Class <- as.factor(est_means_long$Class)
@@ -61,7 +62,7 @@ plotModel <- function(mplus_model, longvar_name = 'SANS',
   
   
   # Create plot
-  est_class_means <- ggplot(data = est_means_long, aes(x = Month, y = SANS, group = Class)) + 
+  est_class_means <- ggplot2::ggplot(data = est_means_long, aes(x = Month, y = SANS, group = Class)) + 
     geom_line(aes(color=Class)) + 
     geom_point(aes(color=Class, shape = Class)) +
     labs(
