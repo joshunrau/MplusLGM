@@ -2,6 +2,7 @@
 ## runModel
 ## -----------------------------------------------------------------------------
 
+
 #' @title runModel
 #' @description Provides a method to run a model with a given class structure
 #'     and polynomial order, testing that the logliklihood value has replicated
@@ -35,6 +36,7 @@
 #'     model_type = 'GBTM')
 #' @export
 #' @import tidyverse
+#' @import glue
 #' @import MplusAutomation
 runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial, 
                      model_type, working_dir = getwd(), max_starts = 4000) {
@@ -104,18 +106,7 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
 } 
 
 
-#' @title createModelDirectory
-#' @description Creates the specified directory if it does not exist.
-#' @param working_dir The current working directory
-#' @param model_type A character vector representing the type of mixture model 
-#'     to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".
-#' @param overall_polynomial An numeric representing the polynomial order for 
-#'     the overall model. Note that only linear, quadratic, and cubic models are 
-#'     supported.
-#' @param classes A numeric value representing the number of classes in the model.
-#' @return A character vector containing the model path
-#' @export
-#' @import glue
+#' Creates the specified directory if it does not exist.
 .createModelDirectory <- function(working_dir, model_type, 
                                   overall_polynomial, classes) {
   

@@ -2,6 +2,7 @@
 ## plotModel
 ## -----------------------------------------------------------------------------
 
+
 #' @title plotModel
 #' @description Plots class trajectories of an MplusObject
 #' @param mplus_model MplusObject containing results
@@ -9,6 +10,8 @@
 #'     to the ggplot object
 #' @return A ggplot object
 #' @export
+#' @import tidyverse
+#' @import glue
 plotModel <- function(mplus_model, longvar_name = 'SANS', 
                       timevar_name = 'Month', figure_caption = 'default') {
 
