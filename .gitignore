@@ -40,3 +40,6 @@ vignettes/*.pdf
 
 # MacOS stuff
 .DS_Store
+
+# Ignore results directory
+/Results
