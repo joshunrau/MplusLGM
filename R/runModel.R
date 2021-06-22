@@ -32,7 +32,7 @@
 #'     idvar = 'id', 
 #'     classes = 3, 
 #'     overall_polynomial = 3, 
-#'     model_type = GBTM)
+#'     model_type = 'GBTM')
 #' @export
 #' @import tidyverse
 #' @import MplusAutomation
