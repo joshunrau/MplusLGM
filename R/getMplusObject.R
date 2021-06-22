@@ -240,10 +240,10 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
       for (j in 1:length(usevar)) {
         tmp <- glue::glue('{usevar[j]} ({count})')
         est_rv_cls <- c(est_rv_cls, tmp)
+        count <- count + 1
       }
       
       class_parameters <- c(class_parameters, est_rv_cls)
-      count <- count + 1
       
     }
   }
