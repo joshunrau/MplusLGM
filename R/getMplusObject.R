@@ -125,14 +125,14 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   }
   
   # Join elements with newlines, then join this with a newline character at end
-  return(paste0(glue_collapse(new_vector, sep = '\n'), '\n'))
+  return(paste0(glue::glue_collapse(new_vector, sep = '\n'), '\n'))
   
 }
 
 
 #' Creates the title section of an MplusObject.
 .getTitle <- function(classes, overall_polynomial, model_type, starts) {
-  model_name <- glue('{model_type}_P{overall_polynomial}_K{classes}_S{starts}')
+  model_name <- glue::glue('{model_type}_P{overall_polynomial}_K{classes}_S{starts}')
   return(.createCommand(model_name))
 }
 
@@ -140,9 +140,9 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
 #' Creates the variable section of an MplusObject.
 .getVariable <- function(usevar, idvar, classes) {
   
-  usevar <- glue('USEVAR = {glue_collapse(.splitLength(usevar), sep = " ")};')
-  idvar <- glue('IDVAR = {idvar};')
-  classes <- glue('CLASSES = c({classes});')
+  usevar <- glue::glue('USEVAR = {glue_collapse(.splitLength(usevar), sep = " ")};')
+  idvar <- glue::glue('IDVAR = {idvar};')
+  classes <- glue::glue('CLASSES = c({classes});')
   return(.createCommand(c(usevar, idvar, classes)))
   
 }
@@ -152,9 +152,9 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
 .getAnalysis <- function(starts, processors = parallel::detectCores()) {
   
   model_type <- 'TYPE = MIXTURE;'
-  model_starts <- glue('STARTS = {starts} {starts/4};')
-  k1starts <- glue('K-1STARTS = {starts/2} {starts/8};')
-  processors <- glue('PROCESSORS = {processors};')
+  model_starts <- glue::glue('STARTS = {starts} {starts/4};')
+  k1starts <- glue::glue('K-1STARTS = {starts/2} {starts/8};')
+  processors <- glue::glue('PROCESSORS = {processors};')
   return(.createCommand(c(model_type, model_starts, k1starts, processors)))
   
 }
@@ -195,24 +195,24 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   vars_timepoints <- c()
   
   for (i in 1:length(usevar)) {
-    vars_timepoints <- c(vars_timepoints, glue('{usevar[[i]]}@{timepoints[[i]]}'))
+    vars_timepoints <- c(vars_timepoints, glue::glue('{usevar[[i]]}@{timepoints[[i]]}'))
   }
   
   # Split into maximum 60 chars per line
   vars_timepoints <- .splitLength(vars_timepoints)
-  vars_timepoints <- glue('{glue_collapse(vars_timepoints, sep = " ")};')
+  vars_timepoints <- glue::glue('{glue_collapse(vars_timepoints, sep = " ")};')
   
   # If the model is a GBTM, fix  residual variance across time and classes
   if (model_type == 'GBTM') {
     
-    restrict_gbtm <- glue('{usevar[1]}-{usevar[length(usevar)]} (1);')
+    restrict_gbtm <- glue::glue('{usevar[1]}-{usevar[length(usevar)]} (1);')
     
   }
   
   # Specify class parameters 
   class_parameters <- c()
   for (i in 1:classes) {
-    class_parameters <- c(class_parameters, glue('%c#{i}%'), class_growth_factors)
+    class_parameters <- c(class_parameters, glue::glue('%c#{i}%'), class_growth_factors)
   }
   
   return(.createCommand(c(overall_label, overall_growth_factors, vars_timepoints, 
@@ -236,12 +236,12 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   
   # Assign to new vector each user variable followed by (s)
   for (i in 1:length(usevar)) {
-    plot_usevar <- c(plot_usevar, glue('{usevar[i]} (s)'))
+    plot_usevar <- c(plot_usevar, glue::glue('{usevar[i]} (s)'))
   }
   
   # Make sure length will not be too long, then collapse into single element
   plot_usevar <- .splitLength(plot_usevar)
-  plot_usevar <- glue('SERIES = {glue_collapse(plot_usevar, sep = " ")};')
+  plot_usevar <- glue::glue('SERIES = {glue::glue_collapse(plot_usevar, sep = " ")};')
   
   return(.createCommand(c(plot_type, plot_usevar)))
   
