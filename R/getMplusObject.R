@@ -204,15 +204,46 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   
   # If the model is a GBTM, fix  residual variance across time and classes
   if (model_type == 'GBTM') {
-    
     restrict_gbtm <- glue::glue('{usevar[1]}-{usevar[length(usevar)]} (1);')
+  }
+  
+  # If the model permits residual variance across time, but not class
+  if (model_type == 'LCGA2') {
+    
+    allow_rv_time <- c()
+    for (i in 1:length(usevar)) {
+      allow_rv_time <- c(allow_rv_time, glue::glue('{usevar[i]} ({i});'))
+    }
     
   }
   
   # Specify class parameters 
   class_parameters <- c()
+  count <- 1  # Needed for LCGA3 model
+  
   for (i in 1:classes) {
     class_parameters <- c(class_parameters, glue::glue('%c#{i}%'), class_growth_factors)
+    
+    # For LCGA model with residual variance across classes, not time
+    if (model_type == 'LCGA1') {
+      est_rv_cls <- glue::glue('{usevar[1]}-{usevar[length(usevar)]} ({i});')
+      class_parameters <- c(class_parameters, est_rv_cls)
+    
+    } 
+    
+    # For LCGA residual variance across class and time
+    else if (model_type == 'LCGA3') { 
+      
+      est_rv_cls <- c()
+      for (j in 1:length(usevar)) {
+        tmp <- glue::glue('{usevar[j]} ({count})')
+        est_rv_cls <- c(est_rv_cls, tmp)
+      }
+      
+      class_parameters <- c(class_parameters, est_rv_cls)
+      count <- count + 1
+      
+    }
   }
   
   return(.createCommand(c(overall_label, overall_growth_factors, vars_timepoints, 
