@@ -45,6 +45,7 @@
 #' )
 #' @export
 #' @importFrom MplusAutomation mplusObject
+#' @importFrom dplyr between
 getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts, 
                            overall_polynomial, model_type) {
   
@@ -55,7 +56,7 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
     
   # Validate values of inputs (i.e., check for ValueError)
   stopifnot(length(usevar) == length(timepoints), length(idvar) == 1,
-            between(classes, 1, 6), between(overall_polynomial, 1, 3),
+            dplyr::between(classes, 1, 6), between(overall_polynomial, 1, 3),
             model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3'))
   
   # Create MplusObject with utility functions for each section of the input file
@@ -160,7 +161,7 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
 #' @export
 #' @import glue
 .getTitle <- function(classes, overall_polynomial, model_type, starts) {
-  model_name <- glue('{model_type}_K{classes}_P{overall_polynomial}_S{starts}')
+  model_name <- glue('{model_type}_P{overall_polynomial}_K{classes}_S{starts}')
   return(.createCommand(model_name))
 }
 
