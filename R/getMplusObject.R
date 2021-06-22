@@ -249,7 +249,7 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   }
   
   return(.createCommand(c(overall_label, overall_growth_factors, vars_timepoints, 
-                         restrict_var, restrict_gbtm,  class_parameters)))
+                         restrict_var, restrict_gbtm, allow_rv_time, class_parameters)))
   
 }
 
