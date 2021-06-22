@@ -9,10 +9,10 @@
 #' @param method The method to use to select the best model
 #' @return An MplusObject
 #' @export
-selectBestModel <- function(list_models, method = 'BIC') {
+selectBestModel <- function(list_models, method = 'BIC_LRT') {
   
   # Input validation
-  stopifnot(is.list(list_models), method %in% c('BIC'))
+  stopifnot(is.list(list_models), method %in% c('BIC', 'BIC_LRT'))
   
   # Assume the best model is the first one
   best_model <- list_models[[1]]
@@ -24,10 +24,18 @@ selectBestModel <- function(list_models, method = 'BIC') {
     # Get BIC from this model
     test_bic <- test_model[["results"]][["summaries"]][["BIC"]]
     
-    # If it is less than the best model, replace it
+    # If it is less than the best model
     if (best_bic > test_bic) {
-      best_model <- test_model
-      best_bic <- test_bic
+      
+      # If the user selected to also need a significant LRT
+      test_LRT <- test_model[["results"]][["summaries"]][["T11_LMR_PValue"]]
+      
+      # If not using LRT, LRT is null (k=1), or LRT is significant, replace
+      if (method != 'BIC_LRT' || is.null(test_LRT) || test_LRT < .05) {
+        best_model <- test_model
+        best_bic <- test_bic
+        
+      }
     }
   }
   
