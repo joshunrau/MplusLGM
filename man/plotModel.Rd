@@ -4,12 +4,7 @@
 \alias{plotModel}
 \title{plotModel}
 \usage{
-plotModel(
-  mplus_model,
-  longvar_name = "SANS",
-  timevar_name = "Month",
-  figure_caption = "default"
-)
+plotModel(mplus_model, figure_caption = "default")
 }
 \arguments{
 \item{mplus_model}{MplusObject containing results}
