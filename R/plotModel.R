@@ -12,11 +12,10 @@
 #' @export
 #' @import tidyverse
 #' @import glue
+#' @import rhdf5
 #' @import ggplot2
-plotModel <- function(mplus_model, longvar_name = 'SANS', 
-                      timevar_name = 'Month', figure_caption = 'default') {
+plotModel <- function(mplus_model, figure_caption = 'default') {
 
-  
   # Get the filepath of this model
   path_datafile <- mplus_model[["results"]][["input"]][["data"]][["file"]]
   path_dir <- stringr::str_remove(path_datafile, ".dat")
@@ -59,7 +58,6 @@ plotModel <- function(mplus_model, longvar_name = 'SANS',
     mutate(Month = factor(as.numeric(Month)))
   est_means_long$Class <- as.factor(est_means_long$Class)
   est_means_long$Month <- as.numeric(levels(est_means_long$Month))[est_means_long$Month]
-  
   
   # Create plot
   est_class_means <- ggplot2::ggplot(data = est_means_long, aes(x = Month, y = SANS, group = Class)) + 
