@@ -4,10 +4,19 @@
 \alias{plotModel}
 \title{plotModel}
 \usage{
-plotModel(mplus_model, figure_caption = "default")
+plotModel(
+  mplus_model,
+  x_axis_label = "time",
+  y_axis_label = "variable",
+  figure_caption = "default caption"
+)
 }
 \arguments{
 \item{mplus_model}{MplusObject containing results}
+
+\item{x_axis_label}{Character vector containing text for x-axis (e.g., time)}
+
+\item{y_axis_label}{Character vector containing text for y-axis}
 
 \item{figure_caption}{Character vector containing text to be added as a caption
 to the ggplot object}
