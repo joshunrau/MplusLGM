@@ -42,7 +42,6 @@ plotModel <- function(mplus_model, figure_caption = 'default') {
   for (i in series_info_split) {
     num_tmp <- suppressWarnings(readr::parse_number(i))
     if (!is.na(num_tmp)) {
-      print(num_tmp)
       list_timepoints <- c(list_timepoints, num_tmp)
     }
   }
