@@ -3,6 +3,7 @@
 export(getFitIndices)
 export(getMplusObject)
 export(plotModel)
+export(runAutomatedAnalysis)
 export(runModel)
 export(selectBestModel)
 import(MplusAutomation)

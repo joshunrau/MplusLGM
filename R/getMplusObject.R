@@ -25,6 +25,9 @@
 #'     supported.
 #' @param model_type A character vector representing the type of mixture model 
 #'     to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".
+#' @param classes_polynomial A vector representing the polynomial order of each
+#'     class. If not specified, the default, it is assumed to be equal to the 
+#'     overall polynomial order of the model, for each class.
 #' @return An MplusObject
 #' @example 
 #' data(SampleData)
@@ -44,18 +47,21 @@
 #' @import glue
 #' @importFrom parallel detectCores
 getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts, 
-                           overall_polynomial, model_type) {
+                           overall_polynomial, model_type, 
+                           classes_polynomial = NULL) {
   
   # Validate types of inputs (i.e., check for TypeError)
   stopifnot(is.data.frame(df), is.character(usevar), is.vector(timepoints),
             is.character(idvar), is.numeric(classes), is.numeric(starts),
-            is.numeric(overall_polynomial), is.character(model_type))
+            is.numeric(overall_polynomial), is.character(model_type),
+            is.vector(classes_polynomial))
     
   # Validate values of inputs (i.e., check for ValueError)
   stopifnot(
     length(usevar) == length(timepoints), length(idvar) == 1,
     dplyr::between(classes, 1, 6), dplyr::between(overall_polynomial, 1, 3),
-    model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3')
+    model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3'), 
+    length(classes_polynomial) == classes || is.null(classes_polynomial)
     )
   
   # Create MplusObject with utility functions for each section of the input file
@@ -171,19 +177,16 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
     
     overall_growth_factors <- 'i s |'
     restrict_var <- 'i-s@0;'
-    class_growth_factors <- '[i s];'
     
   } else if (overall_polynomial == 2) {
     
     overall_growth_factors <- 'i s q |'
     restrict_var <- 'i-q@0;'
-    class_growth_factors <- '[i s q];'
     
   } else if (overall_polynomial == 3) {
     
     overall_growth_factors <- 'i s q cub |'
     restrict_var <- 'i-cub@0;'
-    class_growth_factors <- '[i s q cub];'
     
   } else {
     
@@ -221,9 +224,18 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   
   # Specify class parameters 
   class_parameters <- c()
+  list_growth_factors <- c('[i s];', '[i s q];', '[i s q cub];')
   count <- 1  # Needed for LCGA3 model
   
   for (i in 1:classes) {
+    
+    # Get class growth factors
+    if (is.null(classes_polynomial)) {
+      class_growth_factors <- list_growth_factors[[classes]]
+    } else {
+      class_growth_factors <- list_growth_factors[[classes_polynomial[[i]]]]
+    }
+    
     class_parameters <- c(class_parameters, glue::glue('%c#{i}%'), class_growth_factors)
     
     # For LCGA model with residual variance across classes, not time

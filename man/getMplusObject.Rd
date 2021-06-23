@@ -12,7 +12,8 @@ getMplusObject(
   classes,
   starts,
   overall_polynomial,
-  model_type
+  model_type,
+  classes_polynomial = NULL
 )
 }
 \arguments{
@@ -38,6 +39,10 @@ supported.}
 
 \item{model_type}{A character vector representing the type of mixture model 
 to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".}
+
+\item{classes_polynomial}{A vector representing the polynomial order of each
+class. If not specified, the default, it is assumed to be equal to the 
+overall polynomial order of the model, for each class.}
 }
 \value{
 An MplusObject

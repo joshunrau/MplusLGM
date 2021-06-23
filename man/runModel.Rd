@@ -36,6 +36,8 @@ supported.}
 \item{model_type}{A character vector representing the type of mixture model 
 to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".}
 
+\item{working_dir}{The working directory in which the results folder will be}
+
 \item{max_starts}{A numeric representing the maximum level of starting values
 to use when attempting to replicate the logliklihood before raising an 
 error.}

@@ -4,7 +4,7 @@
 \alias{selectBestModel}
 \title{selectBestModel}
 \usage{
-selectBestModel(list_models, method = "BIC")
+selectBestModel(list_models, method = "BIC_LRT")
 }
 \arguments{
 \item{list_models}{A list containing MplusObjects}
