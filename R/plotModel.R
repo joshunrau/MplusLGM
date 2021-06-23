@@ -56,7 +56,7 @@ plotModel <- function(mplus_model, figure_caption = 'default') {
   est_means_long <- est_means %>% 
     tidyr::pivot_longer(cols = as.character(list_timepoints), 
                  names_to = 'Month', values_to = 'SANS') %>%
-    mutate(Month = factor(as.numeric(Month)))
+    plyr::mutate(Month = factor(as.numeric(Month)))
   est_means_long$Class <- as.factor(est_means_long$Class)
   est_means_long$Month <- as.numeric(levels(est_means_long$Month))[est_means_long$Month]
   
