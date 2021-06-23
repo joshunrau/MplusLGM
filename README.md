@@ -105,7 +105,7 @@ the BIC as the optimal three-class model.
 
 ### Step 4: Refine Polynomial Order
 
-Finally, we will test the significance of the growth factors for each class in
+We will test the significance of the growth factors for each class in
 the model. This can be done using the refinePolynomial function:
 
     final_model <- refinePolynomial(
@@ -114,6 +114,9 @@ the model. This can be done using the refinePolynomial function:
       usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
       idvar = 'id')
 
+### Step 5: Plot Model
 
-Examining the final model, we see that the cubic and quadratic growth factors for
-two of the three classes were eliminated.
+Finally, we can plot the final model, clearly showing that the cubic and quadratic 
+growth factors for two of the three classes were eliminated.
+
+    plotModel(final_model)
