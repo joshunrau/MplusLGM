@@ -6,6 +6,8 @@
 #' @title plotModel
 #' @description Plots class trajectories of an MplusObject
 #' @param mplus_model MplusObject containing results
+#' @param x_axis_label Character vector containing text for x-axis (e.g., time)
+#' @param y_axis_label Character vector containing text for y-axis
 #' @param figure_caption Character vector containing text to be added as a caption
 #'     to the ggplot object
 #' @return A ggplot object
@@ -15,7 +17,8 @@
 #' @import rhdf5
 #' @import readr
 #' @import ggplot2
-plotModel <- function(mplus_model, figure_caption = 'default') {
+plotModel <- function(mplus_model, x_axis_label = 'time', y_axis_label = 'variable', 
+                      figure_caption = 'default caption') {
 
   # Get the filepath of this model
   path_datafile <- mplus_model[["results"]][["input"]][["data"]][["file"]]
@@ -53,19 +56,24 @@ plotModel <- function(mplus_model, figure_caption = 'default') {
   
   # Shift to long
   est_means_long <- est_means %>% 
-    tidyr::pivot_longer(cols = as.character(list_timepoints), 
-                 names_to = 'Month', values_to = 'SANS') %>%
-    plyr::mutate(Month = factor(as.numeric(Month)))
+    tidyr::pivot_longer(
+      cols = as.character(list_timepoints), 
+      names_to = 'Time', 
+      values_to = 'Variable') %>%
+    plyr::mutate(Time = factor(as.numeric(Time)))
   est_means_long$Class <- as.factor(est_means_long$Class)
-  est_means_long$Month <- as.numeric(levels(est_means_long$Month))[est_means_long$Month]
+  est_means_long$Time <- as.numeric(levels(est_means_long$Time))[est_means_long$Time]
+  
+  x_axis <- rlang::sym(x_axis)
   
   # Create plot
-  est_class_means <- ggplot2::ggplot(data = est_means_long, aes(x = Month, y = SANS, group = Class)) + 
+  est_class_means <- ggplot2::ggplot(data = est_means_long, aes(Time, y = Variable, group = Class)) + 
     geom_line(aes(color=Class)) + 
     geom_point(aes(color=Class, shape = Class)) +
     labs(
-      caption = figure_caption,
-      y = 'Mean SANS Global Score') +
+      caption = figure_caption) +
+    xlab(x_axis_label) +
+    ylab(y_axis_label) +
     theme(
       axis.title.y = element_text(vjust = 4, size = 12),
       axis.title.x = element_text(vjust = -2, size = 12),
