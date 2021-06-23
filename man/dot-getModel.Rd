@@ -4,7 +4,14 @@
 \alias{.getModel}
 \title{Creates the model section of an MplusObject.}
 \usage{
-.getModel(usevar, timepoints, overall_polynomial, model_type, classes)
+.getModel(
+  usevar,
+  timepoints,
+  overall_polynomial,
+  model_type,
+  classes,
+  classes_polynomial
+)
 }
 \description{
 Creates the model section of an MplusObject.

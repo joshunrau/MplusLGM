@@ -13,7 +13,8 @@ runModel(
   overall_polynomial,
   model_type,
   working_dir = getwd(),
-  max_starts = 4000
+  max_starts = 4000,
+  classes_polynomial = NULL
 )
 }
 \arguments{
@@ -41,6 +42,9 @@ to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".}
 \item{max_starts}{A numeric representing the maximum level of starting values
 to use when attempting to replicate the logliklihood before raising an 
 error.}
+
+\item{classes_polynomial}{An optional character vector to pass as input to 
+getMplusObject to specify the growth factors to estimate for each class}
 }
 \value{
 An MplusObject containing results

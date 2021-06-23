@@ -24,6 +24,8 @@
 #' @param max_starts A numeric representing the maximum level of starting values
 #'     to use when attempting to replicate the logliklihood before raising an 
 #'     error.
+#' @param classes_polynomial An optional character vector to pass as input to 
+#'     getMplusObject to specify the growth factors to estimate for each class
 #' @return An MplusObject containing results
 #' @example 
 #' data(SampleData)
@@ -40,7 +42,8 @@
 #' @import glue
 #' @import MplusAutomation
 runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial, 
-                     model_type, working_dir = getwd(), max_starts = 4000) {
+                     model_type, working_dir = getwd(), max_starts = 4000, 
+                     classes_polynomial = NULL) {
   
   # Set initial number of starting values at 500
   starts <- 500
@@ -54,7 +57,7 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
     
     # Get MplusObject for specified model
     model <- getMplusObject(df, usevar, timepoints, idvar, classes, starts, 
-                            overall_polynomial, model_type)
+                            overall_polynomial, model_type, classes_polynomial)
     
     # Create model directory to contain specified model if does not exist
     model_dir <- .createModelDirectory(

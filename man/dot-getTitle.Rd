@@ -4,7 +4,7 @@
 \alias{.getTitle}
 \title{Creates the title section of an MplusObject.}
 \usage{
-.getTitle(classes, overall_polynomial, model_type, starts)
+.getTitle(classes, overall_polynomial, model_type, starts, classes_polynomial)
 }
 \description{
 Creates the title section of an MplusObject.

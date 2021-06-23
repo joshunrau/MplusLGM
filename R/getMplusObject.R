@@ -54,7 +54,7 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   stopifnot(is.data.frame(df), is.character(usevar), is.vector(timepoints),
             is.character(idvar), is.numeric(classes), is.numeric(starts),
             is.numeric(overall_polynomial), is.character(model_type),
-            is.vector(classes_polynomial))
+            is.vector(classes_polynomial) || is.null(classes_polynomial))
     
   # Validate values of inputs (i.e., check for ValueError)
   stopifnot(
@@ -66,10 +66,10 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   
   # Create MplusObject with utility functions for each section of the input file
   model <- mplusObject(
-    TITLE = .getTitle(classes, overall_polynomial, model_type, starts),
+    TITLE = .getTitle(classes, overall_polynomial, model_type, starts, classes_polynomial),
     VARIABLE = .getVariable(usevar, idvar, classes),
     ANALYSIS = .getAnalysis(starts),
-    MODEL = .getModel(usevar, timepoints, overall_polynomial, model_type, classes),
+    MODEL = .getModel(usevar, timepoints, overall_polynomial, model_type, classes, classes_polynomial),
     OUTPUT = .getOutout(),
     PLOT = .getPlot(usevar),
     usevariables = colnames(subset(df, select = c(idvar, usevar))),
@@ -137,8 +137,14 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
 
 
 #' Creates the title section of an MplusObject.
-.getTitle <- function(classes, overall_polynomial, model_type, starts) {
+.getTitle <- function(classes, overall_polynomial, model_type, starts, classes_polynomial) {
+  
   model_name <- glue::glue('{model_type}_P{overall_polynomial}_K{classes}_S{starts}')
+  
+  if (!is.null(classes_polynomial)) {
+    model_name <- paste(model_name, glue::glue_collapse(classes_polynomial), sep = '_')
+  }
+  
   return(.createCommand(model_name))
 }
 
@@ -168,7 +174,7 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
 
 #' Creates the model section of an MplusObject.
 .getModel <- function(usevar, timepoints, overall_polynomial, 
-                      model_type, classes) {
+                      model_type, classes, classes_polynomial) {
   
   # Calculate overall growth factors
   overall_label <- '%OVERALL%'
@@ -224,15 +230,29 @@ getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts,
   
   # Specify class parameters 
   class_parameters <- c()
-  list_growth_factors <- c('[i s];', '[i s q];', '[i s q cub];')
+  
+  if (overall_polynomial == 3) {
+    list_growth_factors <- c('[i s q@0 cub@0];', '[i s q cub@0];', '[i s q cub];')
+  } 
+  
+  else if (overall_polynomial == 2) {
+    list_growth_factors <- c('[i s q@0];', '[i s q];')
+  }
+  
+  else if (overall_polynomial == 1) {
+    list_growth_factors <- c('[i s];')
+  }
+  
   count <- 1  # Needed for LCGA3 model
   
   for (i in 1:classes) {
     
     # Get class growth factors
     if (is.null(classes_polynomial)) {
-      class_growth_factors <- list_growth_factors[[classes]]
-    } else {
+      class_growth_factors <- list_growth_factors[[overall_polynomial]]
+    } 
+    
+    else {
       class_growth_factors <- list_growth_factors[[classes_polynomial[[i]]]]
     }
     
