@@ -29,7 +29,7 @@ plotModel <- function(mplus_model, figure_caption = 'default') {
   class_vars <- c()
   for (i in 1:nrow(est_means)) {
     n_cls <- mplus_model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
-    class_vars <- c(class_vars, glue('{i} (N={n_cls})'))
+    class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
   }
   est_means$Class <- class_vars
   
