@@ -1,18 +1,20 @@
-## -----------------------------------------------------------------------------
-## selectBestModel
-## -----------------------------------------------------------------------------
-
-
 #' @title selectBestModel
-#' @description Allows for the selection of the best MplusObject
+#' @description Selects the best model from a list of MplusObjects based on a
+#'     specified method. Current selection methods are "BIC" (select model with 
+#'     the lowest BIC) and "BIC_LRT" (select model with the lowest BIC that also 
+#'     has a significant LRT p-value).
 #' @param list_models A list containing MplusObjects
-#' @param method The method to use to select the best model
+#' @param selection_method A character vector representing the method to use for
+#'     model selection
 #' @return An MplusObject
 #' @export
-selectBestModel <- function(list_models, method = 'BIC_LRT') {
+selectBestModel <- function(
+  list_models, 
+  selection_method = 'BIC_LRT'
+  ) {
   
   # Input validation
-  stopifnot(is.list(list_models), method %in% c('BIC', 'BIC_LRT'))
+  stopifnot(is.list(list_models), selection_method %in% c('BIC', 'BIC_LRT'))
   
   # Assume the best model is the first one
   best_model <- list_models[[1]]
@@ -31,7 +33,7 @@ selectBestModel <- function(list_models, method = 'BIC_LRT') {
       test_LRT <- test_model[["results"]][["summaries"]][["T11_LMR_PValue"]]
       
       # If not using LRT, LRT is null (k=1), or LRT is significant, replace
-      if (method != 'BIC_LRT' || is.null(test_LRT) || test_LRT < .05) {
+      if (selection_method != 'BIC_LRT' || is.null(test_LRT) || test_LRT < .05) {
         best_model <- test_model
         best_bic <- test_bic
         

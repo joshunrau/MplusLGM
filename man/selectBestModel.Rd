@@ -4,16 +4,20 @@
 \alias{selectBestModel}
 \title{selectBestModel}
 \usage{
-selectBestModel(list_models, method = "BIC_LRT")
+selectBestModel(list_models, selection_method = "BIC_LRT")
 }
 \arguments{
 \item{list_models}{A list containing MplusObjects}
 
-\item{method}{The method to use to select the best model}
+\item{selection_method}{A character vector representing the method to use for
+model selection}
 }
 \value{
 An MplusObject
 }
 \description{
-Allows for the selection of the best MplusObject
+Selects the best model from a list of MplusObjects based on a
+    specified method. Current selection methods are "BIC" (select model with 
+    the lowest BIC) and "BIC_LRT" (select model with the lowest BIC that also 
+    has a significant LRT p-value).
 }

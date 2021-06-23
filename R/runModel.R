@@ -1,49 +1,43 @@
-## -----------------------------------------------------------------------------
-## runModel
-## -----------------------------------------------------------------------------
-
-
 #' @title runModel
-#' @description Provides a method to run a model with a given class structure
-#'     and polynomial order, testing that the logliklihood value has replicated
-#'     at least twice within the model, as well as in the model with half the
-#'     number of starts.
-#' @param df A dataframe containing all user variables and the ID variable.
+#' @description Given a set of model parameters, runs iterations of this model, 
+#'     doubling the number of starting values until the loglikelihood value has 
+#'     replicated at least twice within the model, and the best starting value is
+#'     equal to that of the model with half the number of starts.
+#' @param df A data frame containing all user variables and the ID variable
 #' @param usevar A character vector containing variables to be used in Mplus
-#'     for analysis.
+#'     for analysis
 #' @param timepoints A vector containing the timepoints corresponding 
-#'     to the elements in the usevar vector.
-#' @param idvar A character vector containing the ID variable in the dataframe.
-#' @param classes A numeric value representing the number of classes in the model.
-#' @param overall_polynomial An numeric representing the polynomial order for 
-#'     the overall model. Note that only linear, quadratic, and cubic models are 
-#'     supported.
+#'     to the elements in the usevar vector
+#' @param idvar A character vector containing the ID variable in the data frame
+#' @param classes A numeric value representing the number of classes in the model
+#' @param overall_polynomial A numeric value representing the polynomial order for 
+#'     the overall model (note that only linear, quadratic, and cubic models are 
+#'     supported)
 #' @param model_type A character vector representing the type of mixture model 
-#'     to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".
-#' @param working_dir The working directory in which the results folder will be
-#' @param max_starts A numeric representing the maximum level of starting values
-#'     to use when attempting to replicate the logliklihood before raising an 
-#'     error.
+#'     to create (available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3")
+#' @param working_dir The directory where the results folder will be created
+#' @param max_starts A numeric value representing the maximum level of starting values
+#'     to use when attempting to replicate the loglikelihood before raising an 
+#'     error
 #' @param classes_polynomial An optional character vector to pass as input to 
 #'     getMplusObject to specify the growth factors to estimate for each class
-#' @return An MplusObject containing results
-#' @example 
-#' data(SampleData)
-#' runModel(
-#'     df = SampleData,
-#'     usevar = c('var1', 'var2', 'var3', 'var4', 'var5'), 
-#'     timepoints = c(1, 2, 3, 4, 5), 
-#'     idvar = 'id', 
-#'     classes = 3, 
-#'     overall_polynomial = 3, 
-#'     model_type = 'GBTM')
+#' @return An MplusObject
 #' @export
 #' @import tidyverse
 #' @import glue
 #' @import MplusAutomation
-runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial, 
-                     model_type, working_dir = getwd(), max_starts = 4000, 
-                     classes_polynomial = NULL) {
+runModel <- function(
+  df, 
+  usevar, 
+  timepoints, 
+  idvar, 
+  classes, 
+  overall_polynomial, 
+  model_type, 
+  working_dir = getwd(), 
+  max_starts = 4000, 
+  classes_polynomial = NULL
+  ) {
   
   # Set initial number of starting values at 500
   starts <- 500
@@ -56,30 +50,54 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
   while (starts <= max_starts) {
     
     # Get MplusObject for specified model
-    model <- getMplusObject(df, usevar, timepoints, idvar, classes, starts, 
-                            overall_polynomial, model_type, classes_polynomial)
+    model <- getMplusObject(
+      df, 
+      usevar, 
+      timepoints, 
+      idvar, 
+      classes, 
+      starts, 
+      overall_polynomial, 
+      model_type, 
+      classes_polynomial
+      )
     
     # Create model directory to contain specified model if does not exist
     model_dir <- .createModelDirectory(
-      working_dir, model_type, overall_polynomial, classes)
+      working_dir, 
+      model_type, 
+      overall_polynomial, 
+      classes
+      )
     
     # Get name of the model
     model_name <-  stringr::str_remove(model[["TITLE"]], '\n')
     
+    # Get shortened model name to be used as file name
+    model_name_short <- stringr::str_split(model_name, '_')[[1]][-(1:2)]
+    model_name_short <- glue::glue_collapse(model_name_short, sep = '_')
+    
     # Run model and add it to the list of models
     list_log[[count_log]] <- MplusAutomation::mplusModeler(
-      model, glue::glue('{model_dir}/{model_name}.dat'), 
-      glue::glue('{model_dir}/{model_name}.inp'), run = 1,
-      writeData = 'always', hashfilename = FALSE)
+      model, 
+      glue::glue('{model_dir}/{model_name_short}.dat'), 
+      glue::glue('{model_dir}/{model_name_short}.inp'), 
+      run = 1,
+      writeData = 'always', 
+      hashfilename = FALSE
+      )
     
     # If  more than one model in list (i.e., starts != 500, check if replicated)
     if (starts != 500) {
       
       # Read the output file and find separator sentence
-      file <- readLines(glue::glue('{model_dir}/{model_name}.out'))
-      line <- grep("Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:", file)
-      
-      # Get the lines that contain the LL values, splitting the string into a vector of several strings
+      file <- readLines(glue::glue('{model_dir}/{model_name_short}.out'))
+      line <- grep(
+        "Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:", 
+        file
+        )
+
+      # Get lines containing LL values and split into a vector of several strings
       vector1 <- stringr::str_split(file[line+2], " ")[[1]]
       vector2 <- stringr::str_split(file[line+3], " ")[[1]]
       
@@ -91,8 +109,17 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
       if (LL1 == LL2) {
         
         # Extract LL from MplusObjects
-        log_m1 <- MplusAutomation::SummaryTable(list_log[[count_log - 1]], keepCols = 'LL', sortBy = 'LL')
-        log_m2 <- MplusAutomation::SummaryTable(list_log[[count_log]], keepCols = 'LL', sortBy = 'LL')
+        log_m1 <- MplusAutomation::SummaryTable(
+          list_log[[count_log - 1]], 
+          keepCols = 'LL', 
+          sortBy = 'LL'
+          )
+        
+        log_m2 <- MplusAutomation::SummaryTable(
+          list_log[[count_log]], 
+          keepCols = 'LL', 
+          sortBy = 'LL'
+          )
         
         # If these values are equal, return the last model run
         if (log_m1 == log_m2) {
@@ -111,8 +138,12 @@ runModel <- function(df, usevar, timepoints, idvar, classes, overall_polynomial,
 
 
 #' Creates the specified directory if it does not exist.
-.createModelDirectory <- function(working_dir, model_type, 
-                                  overall_polynomial, classes) {
+.createModelDirectory <- function(
+  working_dir, 
+  model_type, 
+  overall_polynomial,
+  classes
+  ) {
   
   results_dir <- glue::glue('{working_dir}/Results')
   model_dir <- glue::glue('{results_dir}/{model_type}/P={overall_polynomial}/K={classes}')

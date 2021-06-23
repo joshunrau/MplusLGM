@@ -1,12 +1,7 @@
-## -----------------------------------------------------------------------------
-## getFitIndices
-## -----------------------------------------------------------------------------
-
-
 #' @title getFitIndices
-#' @description Returns the fit indices for a list of MplusObjects
-#' @param list_models A list of MplusObjects
-#' @return A summary of models in list as df
+#' @description Returns a selection of fit indices for a list of MplusObjects
+#' @param list_models A list containing MplusObjects
+#' @return A data frame
 #' @export
 #' @import MplusAutomation
 #' @import stringr

@@ -1,15 +1,9 @@
-## -----------------------------------------------------------------------------
-## plotModel
-## -----------------------------------------------------------------------------
-
-
 #' @title plotModel
 #' @description Plots class trajectories of an MplusObject
-#' @param mplus_model MplusObject containing results
-#' @param x_axis_label Character vector containing text for x-axis (e.g., time)
-#' @param y_axis_label Character vector containing text for y-axis
-#' @param figure_caption Character vector containing text to be added as a caption
-#'     to the ggplot object
+#' @param mplus_model An MplusObject containing results
+#' @param x_axis_label A character vector containing text for x-axis
+#' @param y_axis_label A character vector containing text for y-axis
+#' @param figure_caption A character vector containing text to be added as a caption
 #' @return A ggplot object
 #' @export
 #' @import tidyverse
@@ -17,8 +11,12 @@
 #' @import rhdf5
 #' @import readr
 #' @import ggplot2
-plotModel <- function(mplus_model, x_axis_label = 'time', y_axis_label = 'variable', 
-                      figure_caption = 'default caption') {
+plotModel <- function(
+  mplus_model, 
+  x_axis_label = 'time', 
+  y_axis_label = 'variable', 
+  figure_caption = 'default caption'
+  ) {
 
   # Get the filepath of this model
   path_datafile <- mplus_model[["results"]][["input"]][["data"]][["file"]]
@@ -63,9 +61,7 @@ plotModel <- function(mplus_model, x_axis_label = 'time', y_axis_label = 'variab
     plyr::mutate(Time = factor(as.numeric(Time)))
   est_means_long$Class <- as.factor(est_means_long$Class)
   est_means_long$Time <- as.numeric(levels(est_means_long$Time))[est_means_long$Time]
-  
-  x_axis <- rlang::sym(x_axis)
-  
+
   # Create plot
   est_class_means <- ggplot2::ggplot(data = est_means_long, aes(Time, y = Variable, group = Class)) + 
     geom_line(aes(color=Class)) + 

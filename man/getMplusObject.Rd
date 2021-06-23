@@ -17,32 +17,31 @@ getMplusObject(
 )
 }
 \arguments{
-\item{df}{A dataframe containing all user variables and the ID variable.}
+\item{df}{A data frame containing all user variables and the ID variable}
 
 \item{usevar}{A character vector containing variables to be used in Mplus
-for analysis.}
+for analysis}
 
 \item{timepoints}{A vector containing the timepoints corresponding 
-to the elements in the usevar vector.}
+to the elements in the usevar vector}
 
-\item{idvar}{A character vector containing the ID variable in the dataframe.}
+\item{idvar}{A character vector containing the ID variable in the data frame}
 
-\item{classes}{A numeric value representing the number of classes in the model.}
+\item{classes}{A numeric value representing the number of classes in the model}
 
-\item{starts}{A numeric representing the number of initial stage starts for 
-the model. Note that the number of final stage optimizations will be set 
-as equal to half of this value.}
+\item{starts}{A numeric value representing the number of initial stage starts for 
+the model (note that the number of final stage optimizations will be set 
+as equal to half of this value)}
 
-\item{overall_polynomial}{An numeric representing the polynomial order for 
-the overall model. Note that only linear, quadratic, and cubic models are 
-supported.}
+\item{overall_polynomial}{A numeric value representing the polynomial order for 
+the overall model (note that only linear, quadratic, and cubic models are 
+supported)}
 
 \item{model_type}{A character vector representing the type of mixture model 
-to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".}
+to create (available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3")}
 
-\item{classes_polynomial}{A vector representing the polynomial order of each
-class. If not specified, the default, it is assumed to be equal to the 
-overall polynomial order of the model, for each class.}
+\item{classes_polynomial}{An optional character vector to pass as input to 
+getMplusObject to specify the growth factors to estimate for each class}
 }
 \value{
 An MplusObject

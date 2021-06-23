@@ -12,14 +12,13 @@ plotModel(
 )
 }
 \arguments{
-\item{mplus_model}{MplusObject containing results}
+\item{mplus_model}{An MplusObject containing results}
 
-\item{x_axis_label}{Character vector containing text for x-axis (e.g., time)}
+\item{x_axis_label}{A character vector containing text for x-axis}
 
-\item{y_axis_label}{Character vector containing text for y-axis}
+\item{y_axis_label}{A character vector containing text for y-axis}
 
-\item{figure_caption}{Character vector containing text to be added as a caption
-to the ggplot object}
+\item{figure_caption}{A character vector containing text to be added as a caption}
 }
 \value{
 A ggplot object

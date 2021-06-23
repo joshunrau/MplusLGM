@@ -1,8 +1,3 @@
-## -----------------------------------------------------------------------------
-## getMplusObject
-## -----------------------------------------------------------------------------
-
-
 #' @title getMplusObject
 #' @description Provides a method to easily create an MplusObject for mixture 
 #'     modeling. Current mixture models supported include: GBTM, with fixed 
@@ -10,56 +5,60 @@
 #'     variance across time, but not class; LCGA2, with fixed residual variance 
 #'     across class, but not time; and LCGA3, with unrestricted residual 
 #'     variance across both time and class.
-#' @param df A dataframe containing all user variables and the ID variable.
+#' @param df A data frame containing all user variables and the ID variable
 #' @param usevar A character vector containing variables to be used in Mplus
-#'     for analysis.
+#'     for analysis
 #' @param timepoints A vector containing the timepoints corresponding 
-#'     to the elements in the usevar vector.
-#' @param idvar A character vector containing the ID variable in the dataframe.
-#' @param classes A numeric value representing the number of classes in the model.
-#' @param starts A numeric representing the number of initial stage starts for 
-#'     the model. Note that the number of final stage optimizations will be set 
-#'     as equal to half of this value.
-#' @param overall_polynomial An numeric representing the polynomial order for 
-#'     the overall model. Note that only linear, quadratic, and cubic models are 
-#'     supported.
+#'     to the elements in the usevar vector
+#' @param idvar A character vector containing the ID variable in the data frame
+#' @param classes A numeric value representing the number of classes in the model
+#' @param starts A numeric value representing the number of initial stage starts for 
+#'     the model (note that the number of final stage optimizations will be set 
+#'     as equal to half of this value)
+#' @param overall_polynomial A numeric value representing the polynomial order for 
+#'     the overall model (note that only linear, quadratic, and cubic models are 
+#'     supported)
 #' @param model_type A character vector representing the type of mixture model 
-#'     to create. Available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3".
-#' @param classes_polynomial A vector representing the polynomial order of each
-#'     class. If not specified, the default, it is assumed to be equal to the 
-#'     overall polynomial order of the model, for each class.
+#'     to create (available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3")
+#' @param classes_polynomial An optional character vector to pass as input to 
+#'     getMplusObject to specify the growth factors to estimate for each class
 #' @return An MplusObject
-#' @example 
-#' data(SampleData)
-#' MyModel <- getMplusObject(
-#'   df = SampleData,
-#'   usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
-#'   timepoints = c(1, 2, 3, 4, 5),
-#'   idvar = 'id',
-#'   classes = 3,
-#'   starts = 500,
-#'   overall_polynomial = 3,
-#'   model_type = 'GBTM'
-#' )
 #' @export
 #' @import MplusAutomation
 #' @import tidyverse
 #' @import glue
 #' @importFrom parallel detectCores
-getMplusObject <- function(df, usevar, timepoints, idvar, classes, starts, 
-                           overall_polynomial, model_type, 
-                           classes_polynomial = NULL) {
+getMplusObject <- function(
+  df, 
+  usevar, 
+  timepoints, 
+  idvar, 
+  classes, 
+  starts, 
+  overall_polynomial, 
+  model_type, 
+  classes_polynomial = NULL
+  ) {
   
   # Validate types of inputs (i.e., check for TypeError)
-  stopifnot(is.data.frame(df), is.character(usevar), is.vector(timepoints),
-            is.character(idvar), is.numeric(classes), is.numeric(starts),
-            is.numeric(overall_polynomial), is.character(model_type),
-            is.vector(classes_polynomial) || is.null(classes_polynomial))
+  stopifnot(
+    is.data.frame(df), 
+    is.character(usevar), 
+    is.vector(timepoints),
+    is.character(idvar), 
+    is.numeric(classes), 
+    is.numeric(starts),
+    is.numeric(overall_polynomial), 
+    is.character(model_type),
+    is.vector(classes_polynomial) || is.null(classes_polynomial)
+    )
     
   # Validate values of inputs (i.e., check for ValueError)
   stopifnot(
-    length(usevar) == length(timepoints), length(idvar) == 1,
-    dplyr::between(classes, 1, 6), dplyr::between(overall_polynomial, 1, 3),
+    length(usevar) == length(timepoints), 
+    length(idvar) == 1,
+    dplyr::between(classes, 1, 6), 
+    dplyr::between(overall_polynomial, 1, 3),
     model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3'), 
     length(classes_polynomial) == classes || is.null(classes_polynomial)
     )

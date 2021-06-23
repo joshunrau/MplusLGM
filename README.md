@@ -81,7 +81,7 @@ easier model comparison).
       usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
       timepoints = c(1, 2, 3, 4, 5),
       idvar = "id",
-      k = 3,
+      classes = 3,
       ref_model = gbtm_models[[3]]
     )
 

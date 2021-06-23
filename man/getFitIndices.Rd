@@ -7,11 +7,11 @@
 getFitIndices(list_models)
 }
 \arguments{
-\item{list_models}{A list of MplusObjects}
+\item{list_models}{A list containing MplusObjects}
 }
 \value{
-A summary of models in list as df
+A data frame
 }
 \description{
-Returns the fit indices for a list of MplusObjects
+Returns a selection of fit indices for a list of MplusObjects
 }
