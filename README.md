@@ -117,7 +117,15 @@ the model. This can be done using the refinePolynomial function:
 
 ### Step 5: Plot Model
 
-Finally, we can plot the final model, clearly showing that the cubic and quadratic 
+We can plot the final model, clearly showing that the cubic and quadratic 
 growth factors for two of the three classes were eliminated.
 
     plotModel(final_model)
+
+### Step 6: Get Dataset With Class
+
+Finally, we can get the dataset with classes included, for further analysis:
+
+    final_dataset <- getDataset(final_model, SampleData, 'id')
+
+

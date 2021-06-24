@@ -8,8 +8,16 @@
 #' @param idvar A character vector containing the ID variable in the data frame
 #' @return An MplusObject
 #' @export
-getDataset <- function(mode, df, idvar) {
+getDataset <- function(model, df, idvar) {
   
+  C <- model[["results"]][["savedata"]][["C"]]
+  ID <- model[["results"]][["savedata"]][["ID"]]
   
+  class_res <- data.frame(ID, C)
+  colnames(class_res) <- c(idvar, 'class')
   
+  df_final <- merge(df, class_res, by = idvar)
+  df_final$class <- as.factor(df_final$class)
+  
+  return(df_final)
 }

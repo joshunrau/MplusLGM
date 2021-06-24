@@ -4,14 +4,14 @@
 \alias{getDataset}
 \title{getDataset}
 \usage{
-getDataset(mode, df, idvar)
+getDataset(model, df, idvar)
 }
 \arguments{
+\item{model}{An MplusObject containing save data}
+
 \item{df}{A data frame to combine with Mplus classes}
 
 \item{idvar}{A character vector containing the ID variable in the data frame}
-
-\item{model}{An MplusObject containing save data}
 }
 \value{
 An MplusObject
