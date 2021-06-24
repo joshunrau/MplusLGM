@@ -4,7 +4,7 @@
 \alias{refinePolynomial}
 \title{refinePolynomial}
 \usage{
-refinePolynomial(model, df, usevar, idvar, working_dir = getwd())
+refinePolynomial(model, df, usevar, timepoints, idvar, working_dir = getwd())
 }
 \arguments{
 \item{model}{An MplusObject}
@@ -14,12 +14,12 @@ refinePolynomial(model, df, usevar, idvar, working_dir = getwd())
 \item{usevar}{A character vector containing variables to be used in Mplus
 for analysis}
 
+\item{timepoints}{A vector containing the timepoints corresponding 
+to the elements in the usevar vector}
+
 \item{idvar}{A character vector containing the ID variable in the data frame}
 
 \item{working_dir}{The directory where the results folder will be created}
-
-\item{timepoints}{A vector containing the timepoints corresponding 
-to the elements in the usevar vector}
 }
 \value{
 An MplusObject

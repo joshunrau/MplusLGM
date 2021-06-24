@@ -2,6 +2,7 @@
 
 export(fitGBTM)
 export(fitLCGA)
+export(getDataset)
 export(getFitIndices)
 export(getMplusObject)
 export(plotModel)
