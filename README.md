@@ -127,5 +127,3 @@ growth factors for two of the three classes were eliminated.
 Finally, we can get the dataset with classes included, for further analysis:
 
     final_dataset <- getDataset(final_model, SampleData, 'id')
-
-
