@@ -52,11 +52,11 @@ you can use the getFitIndices function:
     gbtm_model_fit <- getFitIndices(gbtm_models)
     
     ## Subset of output
-    Title                 BIC
-    GBTM_P3_K3_S1000      3687.833
-    GBTM_P3_K4_S1000      3707.524
-    GBTM_P3_K2_S1000      5106.994
-    GBTM_P3_K1_S1000      8348.766
+    ## Title                 BIC
+    ## GBTM_P3_K3_S1000      3687.833
+    ## GBTM_P3_K4_S1000      3707.524
+    ## GBTM_P3_K2_S1000      5106.994
+    ## GBTM_P3_K1_S1000      8348.766
     
 Examining the fit indices from the models run, we see that the BIC value is lowest 
 for the three-class model. For the purposes of this example, we will assume that is 
@@ -93,11 +93,11 @@ model) as follows:
     lcga_model_fit <- getFitIndices(lcga_models)
     
     ## Subset of output
-    Title                 BIC
-    GBTM_P3_K3_S1000      3687.833
-    LCGA1_P3_K3_S1000     3697.678
-    LCGA2_P3_K3_S1000     3710.444
-    LCGA3_P3_K3_S1000     3764.624
+    ## Title                 BIC
+    ## GBTM_P3_K3_S1000      3687.833
+    ## LCGA1_P3_K3_S1000     3697.678
+    ## LCGA2_P3_K3_S1000     3710.444
+    ## LCGA3_P3_K3_S1000     3764.624
     
 We observe that relaxing the constraints on residual variance does not appear to
 significantly improve model fit, according to the BIC. Therefore, we will select
@@ -112,6 +112,7 @@ the model. This can be done using the refinePolynomial function:
       model = lcga_models[[1]], 
       df = SampleData, 
       usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
+      timepoints = c(1, 2, 3, 4, 5),
       idvar = 'id')
 
 ### Step 5: Plot Model

@@ -71,6 +71,7 @@ getMplusObject <- function(
     MODEL = .getModel(usevar, timepoints, overall_polynomial, model_type, classes, classes_polynomial),
     OUTPUT = .getOutout(),
     PLOT = .getPlot(usevar),
+    SAVEDATA = .getSaveData(classes, starts),
     usevariables = colnames(subset(df, select = c(idvar, usevar))),
     rdata = subset(df, select = c(idvar, usevar)),
     autov = FALSE)
@@ -308,5 +309,14 @@ getMplusObject <- function(
   plot_usevar <- glue::glue('SERIES = {glue::glue_collapse(plot_usevar, sep = " ")};')
   
   return(.createCommand(c(plot_type, plot_usevar)))
+  
+}
+
+
+#' Gets the save data section of an Mplus Object
+.getSaveData <- function(classes, starts) {
+  
+  save_name <- glue::glue('file = K{classes}_S{starts}_res.dat;')
+  return(.createCommand(c(save_name, 'save = CPROBABILITIES;')))
   
 }

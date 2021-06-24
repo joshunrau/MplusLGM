@@ -15,6 +15,7 @@ refinePolynomial <- function(
   model, 
   df, 
   usevar, 
+  timepoints,
   idvar, 
   working_dir = getwd()
   ) {
