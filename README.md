@@ -4,10 +4,16 @@ An extension of the MplusAutomation package (https://github.com/michaelhallquist
 
 ## Installation
 
-First, install and load the devtools package:
+If you do not have it installed, you must install the devtools package:
 
     install.packages("devtools")
-    library(devtools)
+    
+Same thing for the rhdf5 library from bioconductor:
+
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+        
+    BiocManager::install("rhdf5")
     
 Then, you can install this package as follows:
     
