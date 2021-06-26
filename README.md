@@ -22,29 +22,42 @@ Then, you can install this package as follows:
 ## Example:
 
 Here is an example model selection procedure using a sample dataset built into 
-the package.
+the package. This dataset contains four groups of 100 simulated patients with
+four discrete hypothetical diagnoses. Each patient has a measurement of symptoms at
+months 0, 1, 2, 3, 6, 9, and 12. However, 5% of these data were deleted completely 
+at random. In this example, classes will be defined based on measurements up to and
+including month 3.
 
 ### Step 1: Load the Package and Dataset
 
+Load this package into R. For this example, you would also need to import the 
+tidyverse library.
+
     library(MplusMixtures)
-    data("SampleData")
+    library(tidyverse)
     
+Load the hypothetical data into R.
+
+    data("Diagnoses")
+    
+If we examine the symptom levels by diagnosis, we can see that each diagnosis follows a relatively
+distinct trend. However, until month 6, diagnoses C and D follow a nearly identical trend. Hence, we
+will expect a three-class structure to emerge.
+
+    Diagnoses %>% 
+      group_by(dx) %>% 
+      summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
+  
 ### Step 2A: Fit GBTM Models
 
-After loading the package and dataset, you can fit GBTM models from a minimum 
-class to a maximum class using the fitGBTM function. For details regarding this, 
-refer to the documentation, which can be accessed via `?fitGBTM`.
-
-Here, we specify the dataset to be used as SampleData, the variables (var1 - var5)
-to be used for analysis, the timepoints associated with these variables (1 - 5), 
-as well as the ID variable in SampleData. By default, the maximum number of classes
-is set to six. However, as this dataset was designed to contain three classes, 
-we will set the maximum number of anticipated classes to four.
+First, we will fit GBTM models from a minimum class to a maximum class using the 
+fitGBTM function. Given what we know about the dataset, we will assume a maximum 
+class structure of four.
 
     gbtm_models <- fitGBTM(
-      df = SampleData,
-      usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
-      timepoints = c(1, 2, 3, 4, 5),
+      df = Diagnoses,
+      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+      timepoints = c(0, 1, 2, 3),
       idvar = "id",
       max_k = 4
     )
