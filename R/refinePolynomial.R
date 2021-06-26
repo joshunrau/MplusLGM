@@ -52,25 +52,23 @@ refinePolynomial <- function(
   # While any P value for a class growth factor is non-significant
   while (any(pValClass > .05)) {
     
-    # Hold if any non-slope is non-significant to avoid infinite loop
-    all_slope <- TRUE
-    
     # Check each class
     for (i in 1:k) {
       # If the growth factor is not significant, and not the slope, remove it
       if (pValClass[[i]] > 0.05 && head(factorsClass[[i]]) != "S") {
         factorsClass[[i]] = head(factorsClass[[i]], -1) # Remove from counter
-        all_slope <- FALSE
       }
     }
-    
-    # If all slope was not rendered false, all non-signifigant are slopes
-    if (all_slope) {break}
     
     # Get the growth factors for each class as a number
     gf <- c()
     for (i in 1:k) {
       gf <- c(gf, length(factorsClass[[i]]) - 1)  # Subtract for I
+    }
+    
+    # If any growth factor is zero, break as cannot have an intercept only model
+    if (0 %in% gf) {
+      break
     }
     
     # Run model with updated growth factors
