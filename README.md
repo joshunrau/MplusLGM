@@ -6,50 +6,55 @@ An extension of the MplusAutomation package (https://github.com/michaelhallquist
 
 If you do not have them installed, you must install the devtools package and the rhdf5 library from bioconductor:
 
-    install.packages("devtools")
+```
+install.packages("devtools")
+```
 
-    if (!requireNamespace("BiocManager", quietly = TRUE))
-        install.packages("BiocManager") 
-        
-    BiocManager::install("rhdf5")
+```
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager") 
     
+BiocManager::install("rhdf5")
+```
+      
 Then, you can install this package as follows:
     
     devtools::install_github("joshunrau/MplusMixtures")
 
 ## Example:
 
-Below an example model selection procedure using a sample dataset containing four groups 
+Below is an example model selection procedure using a sample dataset containing four groups 
 of 100 simulated patients with four discrete hypothetical diagnoses. In the dataset, symptoms 
-on an arbitary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5%
-of the datapoints were deleted MCAR. Here, we will define classes based on measurements up to 
+on an arbitrary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5%
+of the data points were deleted MCAR. Here, we will define classes based on measurements up to 
 and including month 3.
 
 ### Step 1: Load the Package and Dataset
 
-Load this package into R. For this example, you will also need to import the 
-tidyverse library:
+Load this package and hypothetical data into R:
 
     library(MplusMixtures)
-    library(tidyverse)
-    
-Load the hypothetical data into R:
-
     data("Diagnoses")
     
 If desired, we can examine the symptom variables by diagnosis:
 
-    Diagnoses %>% 
-      group_by(dx) %>% 
-      summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
+```
+library(tidyverse)
 
-    ## A tibble: 4 x 8
-    ## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
-    ## <chr>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-    ## Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
-    ## Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
-    ## Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
-    ## Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
+Diagnoses %>%
+  group_by(dx) %>% 
+  summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
+```
+
+```
+## A tibble: 4 x 8
+## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
+## <chr>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+## Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
+## Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
+## Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
+## Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
+```
     
 We can see that each diagnosis follows a relatively distinct trend. However, until month 6, diagnoses C and D 
 follow a nearly identical trend. Hence, we will expect a three-class structure to emerge in our model.
@@ -74,15 +79,29 @@ Now, we have a list of MplusObjects in the variable "gbtm_models" which contains
 the results from all models run. To see the fit indices associated with these models,
 you can use the getFitIndices function:
 
-    gbtm_model_fit <- getFitIndices(gbtm_models)
+```
+gbtm_model_fit <- getFitIndices(gbtm_models)
+```
+
+```
+##            Title         BIC    Entropy     T11_LMR_PValue
+## GBTM_P3_K3_S1000    10181.83      0.955             0.0000
+## GBTM_P3_K4_S1000    10182.05      0.922             0.3919
+## GBTM_P3_K2_S1000    10540.90      0.995             0.0000
+## GBTM_P3_K1_S1000    11896.66         NA                 NA
+```
  
 Examining the fit indices from the models run, we will conclude the three-class GBTM 
-best fits the data.
+best fits the data. Alternatively, we can use the selectBestModel function to select 
+the best model in the list based on a specified method. For example, here we can specify
+to select the model with the best BIC where the LMR-LRT test p-value is significant:
+
+    best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
 
 ### Step 3A: Attempt to Relax Residual Variance Restrictions
 
 Next, we will try to relax the assumptions of equal residual variance across classes
-and time intrinsic to GBTM. Hence, we will fit additional three model: LCGA1, allowing
+and time intrinsic to GBTM. Hence, we will fit an additional three models: LCGA1, allowing
 for residual variance to vary across classes; LCGA2, allowing for residual variance to 
 vary across time; and LCGA3, allowing for residual variance to vary across both time
 and class. 
@@ -97,7 +116,7 @@ be included in the list returned by the fitLCGA function, allowing for easier mo
       timepoints = c(0, 1, 2, 3),
       idvar = "id",
       classes = 3,
-      ref_model = gbtm_models[[3]]
+      ref_model = best_gbtm_model
     )
 
 ### Step 3B: Select the Best-Fitting Model for K Classes
@@ -105,11 +124,20 @@ be included in the list returned by the fitLCGA function, allowing for easier mo
 As before, we can examine the fit indices of these models fit (and the reference 
 model) as follows:
 
-    lcga_model_fit <- getFitIndices(lcga_models)
-    
-Note that you can also use the selectBestModel function to select the best model in the list
-based on a specified method. For example, here, we can identify the best model with
-respect to the BIC:
+```
+lcga_model_fit <- getFitIndices(lcga_models)
+```
+
+```
+##             Title         BIC    Entropy     T11_LMR_PValue
+## LCGA1_P3_K3_S1000    10123.15      0.941             0.0000
+## LCGA3_P3_K3_S1000    10147.36      0.956             0.0000
+##  GBTM_P3_K3_S1000    10181.83      0.955             0.0000
+## LCGA2_P3_K3_S1000    10199.56      0.956             0.0000
+```
+
+Similarly, we can use the selectBestModel function to select the best 
+model in the list. For example, here we can do this using only the BIC:
 
     best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
