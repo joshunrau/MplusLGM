@@ -42,7 +42,7 @@ If desired, we can examine the symptom variables by diagnosis:
     Diagnoses %>% 
       group_by(dx) %>% 
       summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
-    
+
     ## A tibble: 4 x 8
     ## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
     ## <chr>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
