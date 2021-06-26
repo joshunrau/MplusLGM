@@ -77,17 +77,9 @@ the results from all models run. To see the fit indices associated with these mo
 you can use the getFitIndices function:
 
     gbtm_model_fit <- getFitIndices(gbtm_models)
-    
-    ## Subset of output
-    ## Title                 BIC
-    ## GBTM_P3_K3_S1000      3687.833
-    ## GBTM_P3_K4_S1000      3707.524
-    ## GBTM_P3_K2_S1000      5106.994
-    ## GBTM_P3_K1_S1000      8348.766
-    
-Examining the fit indices from the models run, we see that the BIC value is lowest 
-for the three-class model. For the purposes of this example, we will assume that is 
-sufficient to conclude the three-class GBTM best fits the data.
+ 
+Examining the fit indices from the models run, we will conclude the three-class GBTM 
+best fits the data.
 
 ### Step 3A: Attempt to Relax Residual Variance Restrictions
 
@@ -97,16 +89,14 @@ for residual variance to vary across classes; LCGA2, allowing for residual varia
 vary across time; and LCGA3, allowing for residual variance to vary across both time
 and class. 
 
-This can be done using the fitLCGA function. We will set the dataset, user variables,
-timepoints, and id variable as described for GBTM. Additionally, we will set the class
-structure to three, and specify the three-class GBTM model previously fit as the reference
-model (i.e., it will be included in the list returned by the fitLCGA function, allowing for
-easier model comparison).
+This can be done using the fitLCGA function. We will set the class structure to three, 
+and specify the three-class GBTM model previously fit as the reference model (i.e., it will 
+be included in the list returned by the fitLCGA function, allowing for easier model comparison).
 
     lcga_models <- fitLCGA(
-      df = SampleData,
-      usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
-      timepoints = c(1, 2, 3, 4, 5),
+      df = Diagnoses,
+      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+      timepoints = c(0, 1, 2, 3),
       idvar = "id",
       classes = 3,
       ref_model = gbtm_models[[3]]
@@ -119,16 +109,11 @@ model) as follows:
 
     lcga_model_fit <- getFitIndices(lcga_models)
     
-    ## Subset of output
-    ## Title                 BIC
-    ## GBTM_P3_K3_S1000      3687.833
-    ## LCGA1_P3_K3_S1000     3697.678
-    ## LCGA2_P3_K3_S1000     3710.444
-    ## LCGA3_P3_K3_S1000     3764.624
-    
-We observe that relaxing the constraints on residual variance does not appear to
-significantly improve model fit, according to the BIC. Therefore, we will select
-the BIC as the optimal three-class model. 
+You can also use the selectBestModel function to select the best model in the list
+based on a specified method. For example, here, we can identify the best model with
+respect to the BIC
+
+    best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
 ### Step 4: Refine Polynomial Order
 
@@ -136,16 +121,15 @@ We will test the significance of the growth factors for each class in
 the model. This can be done using the refinePolynomial function:
 
     final_model <- refinePolynomial(
-      model = lcga_models[[1]], 
-      df = SampleData, 
-      usevar = c('var1', 'var2', 'var3', 'var4', 'var5'),
-      timepoints = c(1, 2, 3, 4, 5),
+      model = best_bic_model, 
+      df = Diagnoses, 
+      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+      timepoints = c(0, 1, 2, 3),
       idvar = 'id')
 
 ### Step 5: Plot Model
 
-We can plot the final model, clearly showing that the cubic and quadratic 
-growth factors for two of the three classes were eliminated.
+We can plot the final model:
 
     plotModel(final_model)
 
@@ -153,4 +137,4 @@ growth factors for two of the three classes were eliminated.
 
 Finally, we can get the dataset with classes included, for further analysis:
 
-    final_dataset <- getDataset(final_model, SampleData, 'id')
+    final_dataset <- getDataset(final_model, Diagnoses, 'id')
