@@ -3,13 +3,15 @@
 An extension of the MplusAutomation package (https://github.com/michaelhallquist/MplusAutomation), MplusMixtures is designed to facilitate the creation and selection of mixture models with Mplus. This package provides more intuitive methods of interacting with functions provided by MplusAutomation, as well as additional functionality for model selection.
 
 
-If you do not have it installed, you must install the devtools package, as well as the rhdf5 library from bioconductor:
+If you do not have it installed, you must install the devtools package:
 
     install.packages("devtools")
     
+Same thing for the rhdf5 library from bioconductor:
+
     if (!requireNamespace("BiocManager", quietly = TRUE))
         install.packages("BiocManager")
-
+        
     BiocManager::install("rhdf5")
     
 Then, you can install this package as follows:
