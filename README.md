@@ -4,14 +4,12 @@ An extension of the MplusAutomation package (https://github.com/michaelhallquist
 
 ## Installation
 
-If you do not have it installed, you must install the devtools package:
+If you do not have them installed, you must install the devtools package and the rhdf5 library from bioconductor:
 
     install.packages("devtools")
-    
-Same thing for the rhdf5 library from bioconductor:
 
     if (!requireNamespace("BiocManager", quietly = TRUE))
-        install.packages("BiocManager")
+        install.packages("BiocManager") 
         
     BiocManager::install("rhdf5")
     
@@ -21,33 +19,30 @@ Then, you can install this package as follows:
 
 ## Example:
 
-Here is an example model selection procedure using a sample dataset built into 
-the package. This dataset contains four groups of 100 simulated patients with
-four discrete hypothetical diagnoses. Each patient has a measurement of symptoms at
-months 0, 1, 2, 3, 6, 9, and 12. However, 5% of these data were deleted completely 
-at random. In this example, classes will be defined based on measurements up to and
-including month 3.
+Below an example model selection procedure using a sample dataset containing four groups 
+of 100 simulated patients with four discrete hypothetical diagnoses. In the dataset, symptoms 
+on an arbitary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5%
+of the datapoints were deleted MCAR. Here, we will define classes based on measurements up to 
+and including month 3.
 
 ### Step 1: Load the Package and Dataset
 
-Load this package into R. For this example, you would also need to import the 
-tidyverse library.
+Load this package into R. For this example, you will also need to import the 
+tidyverse library:
 
     library(MplusMixtures)
     library(tidyverse)
     
-Load the hypothetical data into R.
+Load the hypothetical data into R:
 
     data("Diagnoses")
     
-If we examine the symptom levels by diagnosis, we can see that each diagnosis follows a relatively
-distinct trend. However, until month 6, diagnoses C and D follow a nearly identical trend. Hence, we
-will expect a three-class structure to emerge.
+If desired, we can examine the symptom variables by diagnosis:
 
     Diagnoses %>% 
       group_by(dx) %>% 
       summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
-      
+    
     ## A tibble: 4 x 8
     ## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
     ## <chr>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
@@ -56,11 +51,14 @@ will expect a three-class structure to emerge.
     ## Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
     ## Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
     
+We can see that each diagnosis follows a relatively distinct trend. However, until month 6, diagnoses C and D 
+follow a nearly identical trend. Hence, we will expect a three-class structure to emerge in our model.
+    
 ### Step 2A: Fit GBTM Models
 
 First, we will fit GBTM models from a minimum class to a maximum class using the 
 fitGBTM function. Given what we know about the dataset, we will assume a maximum 
-class structure of four.
+class structure of four:
 
     gbtm_models <- fitGBTM(
       df = Diagnoses,
@@ -72,7 +70,7 @@ class structure of four.
     
 ### Step 2B: Select the Best-Fitting GBTM Model
     
-Now, we have a list of MplusObjects in the variable "gbtm_models" which contain
+Now, we have a list of MplusObjects in the variable "gbtm_models" which contains
 the results from all models run. To see the fit indices associated with these models,
 you can use the getFitIndices function:
 
@@ -91,7 +89,7 @@ and class.
 
 This can be done using the fitLCGA function. We will set the class structure to three, 
 and specify the three-class GBTM model previously fit as the reference model (i.e., it will 
-be included in the list returned by the fitLCGA function, allowing for easier model comparison).
+be included in the list returned by the fitLCGA function, allowing for easier model comparison):
 
     lcga_models <- fitLCGA(
       df = Diagnoses,
@@ -109,9 +107,9 @@ model) as follows:
 
     lcga_model_fit <- getFitIndices(lcga_models)
     
-You can also use the selectBestModel function to select the best model in the list
+Note that you can also use the selectBestModel function to select the best model in the list
 based on a specified method. For example, here, we can identify the best model with
-respect to the BIC
+respect to the BIC:
 
     best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
