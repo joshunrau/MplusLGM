@@ -152,15 +152,59 @@ the model. This can be done using the refinePolynomial function:
       usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
       timepoints = c(0, 1, 2, 3),
       idvar = 'id')
+   
+### Step 5: Get Dataset With Class
 
-### Step 5: Plot Model
-
-We can plot the final model:
-
-    plotModel(final_model)
-
-### Step 6: Get Dataset With Class
-
-Finally, we can get the dataset with classes included, for further analysis:
+We can get the dataset with classes included, for further analysis:
 
     final_dataset <- getDataset(final_model, Diagnoses, 'id')
+    
+
+### Step 6: Plot Model
+
+Finally, we can plot the final model:
+
+    plotModel(final_model)
+    
+For users familiar with R, it is possible to pass additional geoms as arguments to plotModel. For example, here we can plot the observed means against the final model:
+
+    # Get actual class means at all timepoints observed
+    sx_means <- final_dataset %>%
+      group_by(Class) %>% 
+      summarise_at(vars(colnames(final_dataset)[3:9]), mean, na.rm = TRUE)
+
+    # Rename symptom variables as numbers
+    sx_timepoints <- parse_number(colnames(final_dataset[3:9]))
+    colnames(sx_means) <- c('Class', parse_number(colnames(final_dataset[3:9])))
+
+    # Convert to long form
+    sx_means_long <- sx_means %>% 
+      pivot_longer(
+        cols = 2:8, 
+        names_to = "Month", values_to = "Symptoms") %>%
+      mutate(Month = factor(as.numeric(Month)))
+    sx_means_long$Month <- as.numeric(levels(sx_means_long$Month))[sx_means_long$Month]
+
+    # Create geom for line
+    sx_line <- geom_line(
+      data = sx_means_long, 
+      aes(Month, y = Symptoms, group = Class, color=Class), 
+      linetype = 'dashed'
+    )
+
+    # Create geom for points
+    sx_point <- geom_point(
+      data = sx_means_long, 
+      aes(Month, y = Symptoms, group = Class, color=Class, shape = Class)
+      )
+
+
+    # Pass geoms to the plotModel function
+    plotModel(
+      mplus_model = final_model, 
+      x_axis_label = 'Month', 
+      y_axis_label = 'Symptoms', 
+      figure_caption = 'Symptom Levels by Class',
+      geom_line2 = sx_line,
+      geom_point2 = sx_point
+      )
