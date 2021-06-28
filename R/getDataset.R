@@ -14,10 +14,10 @@ getDataset <- function(model, df, idvar) {
   ID <- model[["results"]][["savedata"]][["ID"]]
   
   class_res <- data.frame(ID, C)
-  colnames(class_res) <- c(idvar, 'class')
+  colnames(class_res) <- c(idvar, 'Class')
   
   df_final <- merge(df, class_res, by = idvar)
-  df_final$class <- as.factor(df_final$class)
+  df_final$Class <- as.factor(df_final$Class)
   
   return(df_final)
 }
