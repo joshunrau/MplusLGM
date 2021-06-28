@@ -3,6 +3,8 @@
 #' @param mplus_model An MplusObject containing results
 #' @param x_axis_label A character vector containing text for x-axis
 #' @param y_axis_label A character vector containing text for y-axis
+#' @param geom_line2 Specify an additional geom for ggplot
+#' @param geom_point2 Specify an additional geom for ggplot
 #' @param figure_caption A character vector containing text to be added as a caption
 #' @return A ggplot object
 #' @export
@@ -12,10 +14,12 @@
 #' @import readr
 #' @import ggplot2
 plotModel <- function(
-  mplus_model, 
+  mplus_model,
   x_axis_label = 'time', 
   y_axis_label = 'variable', 
-  figure_caption = 'default caption'
+  figure_caption = 'default caption',
+  geom_line2 = NULL,
+  geom_point2 = NULL
   ) {
 
   # Get the filepath of this model
@@ -61,13 +65,22 @@ plotModel <- function(
     plyr::mutate(Time = factor(as.numeric(Time)))
   est_means_long$Class <- as.factor(est_means_long$Class)
   est_means_long$Time <- as.numeric(levels(est_means_long$Time))[est_means_long$Time]
-
+  
   # Create plot
-  est_class_means <- ggplot2::ggplot(data = est_means_long, aes(Time, y = Variable, group = Class)) + 
-    geom_line(aes(color=Class)) + 
-    geom_point(aes(color=Class, shape = Class)) +
-    labs(
-      caption = figure_caption) +
+  est_class_means <- ggplot2::ggplot() + 
+    geom_line(data = est_means_long, aes(Time, y = Variable, group = Class, color=Class)) + 
+    geom_point(data = est_means_long, aes(Time, y = Variable, group = Class, color=Class, shape = Class))
+  
+  if (!is.null(geom_line2)) {
+    est_class_means <- est_class_means + geom_line2
+  }
+  
+  if (!is.null(geom_point2)) {
+    est_class_means <- est_class_means + geom_point2
+  }
+  
+  est_class_means <- est_class_means +
+    labs(caption = figure_caption) +
     xlab(x_axis_label) +
     ylab(y_axis_label) +
     theme(
