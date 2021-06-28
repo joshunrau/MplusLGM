@@ -200,7 +200,7 @@ For users familiar with R, it is possible to pass additional geoms as arguments 
 
 
     # Pass geoms to the plotModel function
-    plotModel(
+    my_plot <- plotModel(
       mplus_model = final_model, 
       x_axis_label = 'Month', 
       y_axis_label = 'Symptoms', 
@@ -208,3 +208,6 @@ For users familiar with R, it is possible to pass additional geoms as arguments 
       geom_line2 = sx_line,
       geom_point2 = sx_point
       )
+     
+     # Specify scale for asthetics
+     my_plot + scale_x_continuous(breaks = seq(0, 12, by = 3))
