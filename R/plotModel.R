@@ -22,14 +22,10 @@ plotModel <- function(
   geom_point2 = NULL
   ) {
 
-  # Get the filepath of this model
-  path_datafile <- mplus_model[["results"]][["input"]][["data"]][["file"]]
-  path_dir <- stringr::str_remove(path_datafile, ".dat")
-  path_gh5 <- paste0(path_dir, '.gh5')
+  # Get estimated means
+  est_means <- mplus_model[["results"]][["gh5"]][["means_and_variances_data"]][["y_estimated_means"]][["values"]]
+  est_means <- as.data.frame(t(est_means))
   
-  # Extract the estimated means to df
-  est_means <- as.data.frame(t(mplus.get.estimated_means(path_gh5, 'process1')))
-
   # Get class variable
   class_vars <- c()
   for (i in 1:nrow(est_means)) {
