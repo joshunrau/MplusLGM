@@ -1,6 +1,6 @@
 #' @title plotModel
 #' @description Plots class trajectories of an MplusObject
-#' @param mplus_model An MplusObject containing results
+#' @param model An MplusObject containing results
 #' @param x_axis_label A character vector containing text for x-axis
 #' @param y_axis_label A character vector containing text for y-axis
 #' @param geom_line2 Specify an additional geom for ggplot
@@ -14,7 +14,7 @@
 #' @import readr
 #' @import ggplot2
 plotModel <- function(
-  mplus_model,
+  model,
   x_axis_label = 'time', 
   y_axis_label = 'variable', 
   figure_caption = NULL,
