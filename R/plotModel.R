@@ -84,11 +84,11 @@ plotModel <- function(
     xlab(x_axis_label) +
     ylab(y_axis_label) +
     theme(
-      axis.title.y = element_text(vjust = 4, size = 12),
-      axis.title.x = element_text(vjust = -2, size = 12),
-      plot.caption = element_text(hjust = 0.5, vjust = -2, size = 15),
+      text = element_text(size=15),
+      axis.title.y = element_text(vjust = 4),
+      axis.title.x = element_text(vjust = -2),
+      plot.caption = element_text(hjust = 0.5, vjust = -2),
       plot.margin = unit(c(.5, 0, .5, .5), "cm"),
-      legend.text = element_text(size = 12),
       legend.position="top",
     )
   
