@@ -201,7 +201,7 @@ For users familiar with R, it is possible to pass additional geoms as arguments 
 
     # Pass geoms to the plotModel function
     my_plot <- plotModel(
-      mplus_model = final_model, 
+      model = final_model, 
       x_axis_label = 'Month', 
       y_axis_label = 'Symptoms', 
       figure_caption = 'Symptom Levels by Class',
