@@ -23,19 +23,19 @@ plotModel <- function(
   ) {
 
   # Get estimated means
-  est_means <- mplus_model[["results"]][["gh5"]][["means_and_variances_data"]][["y_estimated_means"]][["values"]]
+  est_means <- model[["results"]][["gh5"]][["means_and_variances_data"]][["y_estimated_means"]][["values"]]
   est_means <- as.data.frame(t(est_means))
   
   # Get class variable
   class_vars <- c()
   for (i in 1:nrow(est_means)) {
-    n_cls <- mplus_model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
+    n_cls <- model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
     class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
   }
   est_means$Class <- class_vars
   
   # Get the timepoints for the plot
-  plot_info_split <- stringr::str_split(mplus_model[["PLOT"]], "\n")[[1]]
+  plot_info_split <- stringr::str_split(model[["PLOT"]], "\n")[[1]]
   series_info <-  plot_info_split[[grep('SERIES', plot_info_split)]]
   series_info_split <- stringr::str_split(series_info, ' ')[[1]]
   
