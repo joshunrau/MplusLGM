@@ -8,7 +8,7 @@ plotModel(
   mplus_model,
   x_axis_label = "time",
   y_axis_label = "variable",
-  figure_caption = "default caption",
+  figure_caption = NULL,
   geom_line2 = NULL,
   geom_point2 = NULL
 )
