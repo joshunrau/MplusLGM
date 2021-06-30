@@ -1,11 +1,15 @@
 #' @title getFitIndices
 #' @description Returns a selection of fit indices for a list of MplusObjects
 #' @param list_models A list containing MplusObjects
+#' @param type_stats A character vector containing the statistics to return
 #' @return A data frame
 #' @export
 #' @import MplusAutomation
 #' @import stringr
-getFitIndices <- function(list_models) {
+getFitIndices <- function(
+  list_models, 
+  type_stats = c("Title", 'LL', "BIC", "Entropy", "T11_LMR_Value", "T11_LMR_PValue")
+  ) {
   
   # Iterate through all models in list to extract results from path
   model_res_list <- list()
@@ -27,8 +31,7 @@ getFitIndices <- function(list_models) {
   # Create table of these models and return
   models_sum <- MplusAutomation::SummaryTable(
     model_res_list, 
-    keepCols = c("Title", "Parameters", 'LL', "BIC", "Entropy",
-                 "T11_LMR_Value", "T11_LMR_PValue"))
+    keepCols = type_stats)
   
   return(models_sum)
   
