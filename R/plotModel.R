@@ -68,8 +68,8 @@ plotModel <- function(
   
   # Create plot
   est_class_means <- ggplot2::ggplot() + 
-    geom_line(data = est_means_long, aes(Time, y = Variable, group = Class, color=Class)) + 
-    geom_point(data = est_means_long, aes(Time, y = Variable, group = Class, color=Class, shape = Class))
+    geom_line(data = est_means_long, aes(x = Time, y = Variable, group = Class, color=Class)) + 
+    geom_point(data = est_means_long, aes(x = Time, y = Variable, group = Class, color=Class, shape = Class))
   
   if (!is.null(geom_line2)) {
     est_class_means <- est_class_means + geom_line2
