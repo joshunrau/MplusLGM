@@ -59,6 +59,7 @@ getMplusObject <- function(
     length(idvar) == 1,
     dplyr::between(classes, 1, 6), 
     dplyr::between(overall_polynomial, 1, 3),
+    overall_polynomial <= length(timepoints) - 1,
     model_type %in% c('GBTM', 'LCGA1', 'LCGA2', 'LCGA3'), 
     length(classes_polynomial) == classes || is.null(classes_polynomial)
     )
