@@ -11,7 +11,7 @@
 getDataset <- function(model, df, idvar) {
   
   C <- model[["results"]][["savedata"]][["C"]]
-  ID <- model[["results"]][["savedata"]][["ID"]]
+  ID <- final_model[["results"]][["savedata"]][[toupper(idvar)]]
   
   class_vars <- c()
   for (i in 1:max(C)) {
