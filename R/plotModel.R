@@ -10,7 +10,6 @@
 #' @export
 #' @import tidyverse
 #' @import glue
-#' @import rhdf5
 #' @import readr
 #' @import ggplot2
 plotModel <- function(
