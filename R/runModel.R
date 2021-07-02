@@ -77,15 +77,23 @@ runModel <- function(
     model_name_short <- stringr::str_split(model_name, '_')[[1]][-(1:2)]
     model_name_short <- glue::glue_collapse(model_name_short, sep = '_')
     
+    print(glue::glue('Begin running model: {model_name}'))
+    
     # Run model and add it to the list of models
-    list_log[[count_log]] <- MplusAutomation::mplusModeler(
-      model, 
-      glue::glue('{model_dir}/{model_name_short}.dat'), 
-      glue::glue('{model_dir}/{model_name_short}.inp'), 
-      run = 1,
-      writeData = 'always', 
-      hashfilename = FALSE
+    capture.output(
+      list_log[[count_log]] <- MplusAutomation::mplusModeler(
+        model, 
+        glue::glue('{model_dir}/{model_name_short}.dat'), 
+        glue::glue('{model_dir}/{model_name_short}.inp'), 
+        run = 1,
+        writeData = 'always', 
+        hashfilename = FALSE,
+        quiet = TRUE # This is seemingly broken in MplusAutomation
       )
+    )
+    
+    print(glue::glue('Finished running model: {model_name}'))
+    print(glue::glue('\n'))
     
     # If  more than one model in list (i.e., starts != 500, check if replicated)
     if (starts != 500) {
