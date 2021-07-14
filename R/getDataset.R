@@ -11,7 +11,7 @@
 getDataset <- function(model, df, idvar) {
   
   C <- model[["results"]][["savedata"]][["C"]]
-  ID <- final_model[["results"]][["savedata"]][[toupper(idvar)]]
+  ID <- as.factor(model[["rdata"]][[idvar]])
   
   class_vars <- c()
   for (i in 1:max(C)) {
@@ -19,14 +19,16 @@ getDataset <- function(model, df, idvar) {
     class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
   }
   
+  
   C <- as.factor(C)
   levels(C) <- class_vars
   
   class_res <- data.frame(ID, C)
   colnames(class_res) <- c(idvar, 'Class')
   
-  df_final <- merge(df, class_res, by = idvar)
+  df_final <- merge(df, class_res, by.y = idvar)
   df_final$Class <- as.factor(df_final$Class)
   
   return(df_final)
+  
 }
