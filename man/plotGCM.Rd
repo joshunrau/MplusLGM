@@ -4,7 +4,17 @@
 \alias{plotGCM}
 \title{plotGCM}
 \usage{
-plotGCM(gcm_model, timepoints)
+plotGCM(model, timepoints, x_axis_label = "time", y_axis_label = "variable")
+}
+\arguments{
+\item{model}{An MplusObject containing results}
+
+\item{timepoints}{A vector containing the timepoints corresponding 
+to the elements in the usevar vector}
+
+\item{x_axis_label}{A character vector containing text for x-axis}
+
+\item{y_axis_label}{A character vector containing text for y-axis}
 }
 \description{
 Plot a Growth Curve Model
