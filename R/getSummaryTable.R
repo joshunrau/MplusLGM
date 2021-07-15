@@ -105,12 +105,12 @@ getSummaryTable <- function(
     
     if (!exists('cat_vars_summary')) {
       
-      cat_vars_summary <- .listTablesToDF(cat_vars_summaries[[v]], v)
+      cat_vars_summary <- .listTablesToDF(cat_vars_summaries[[v]], group_var, v, final_dataset)
       
     } else {
       
       cat_vars_summary <- rbind(cat_vars_summary,
-                                .listTablesToDF(cat_vars_summaries[[v]], v))
+                                .listTablesToDF(cat_vars_summaries[[v]], group_var, v, final_dataset))
       
     }
     
@@ -125,17 +125,25 @@ getSummaryTable <- function(
 }
 
 
-.listTablesToDF <- function(list_tables, varName) {
+.listTablesToDF <- function(list_tables, group_var, varName, df) {
   
   for (i in 1:length(list_tables)) {
     
     # get grouping var level 
     group_var_tmp <- labels(list_tables[i])
     
+    df_sum <- df %>% filter(.data[[group_var]] == group_var_tmp)
+    
+    sum_var <- sum(!is.na(df_sum[[varName]]))
+    
     # get the table
     table_tmp <- data.frame(list_tables[[i]])
+    table_tmp[['Perc']] <- round((table_tmp[['Freq']] / sum_var) * 100, digits = 2)
+    
+    # reorganize the table
     row.names(table_tmp) <- table_tmp[[1]]
-    table_tmp[[group_var_tmp]] <- table_tmp[['Freq']]
+    table_tmp[[group_var_tmp]] <- paste0(table_tmp[['Freq']], ' (', 
+                                         table_tmp[['Perc']], '%)')
     table_tmp <- subset(table_tmp, select = group_var_tmp)
     
     if (i == 1) {
