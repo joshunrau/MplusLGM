@@ -210,7 +210,7 @@ getMplusObject <- function(
   
   # Split into maximum 60 chars per line
   vars_timepoints <- .splitLength(vars_timepoints)
-  vars_timepoints <- glue::glue('{glue_collapse(vars_timepoints, sep = " ")};')
+  vars_timepoints <- glue::glue('{glue::glue_collapse(vars_timepoints, sep = " ")};')
   
   # If the model is a GBTM, fix  residual variance across time and classes
   if (model_type == 'GBTM') {
