@@ -87,8 +87,7 @@ runModel <- function(
         glue::glue('{model_dir}/{model_name_short}.inp'), 
         run = 1,
         writeData = 'always', 
-        hashfilename = FALSE,
-        quiet = TRUE # This is seemingly broken in MplusAutomation
+        hashfilename = FALSE
       )
     )
     
