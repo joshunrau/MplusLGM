@@ -8,8 +8,7 @@
 getSummaryTable <- function(
   df, 
   group_var, 
-  list_vars, 
-  list_labels = NULL
+  list_vars
   ) {
   
   # Input validation
@@ -17,9 +16,6 @@ getSummaryTable <- function(
     is.data.frame(df),
     is.factor(df[,group_var]), 
     is.vector(list_vars),
-    is.null(list_labels) || 
-      (is.vector(list_labels) && 
-         length(list_vars) == length(list_labels)),
     list_vars %in% colnames(df)
   )
   
@@ -72,13 +68,8 @@ getSummaryTable <- function(
   
   cont_vars_summary <- data.frame(cont_vars_summary)
 
-  # Rename variables in dataframe if specified
-  if (!is.null(list_labels)) {
-    lab_indices <- match(all_continuous, list_vars)
-    rownames(cont_vars_summary) <- list_labels[lab_indices]
-  } else {
-    rownames(cont_vars_summary) <- all_continuous
-  }
+  # Rename variables in dataframe
+  rownames(cont_vars_summary) <- all_continuous
   
   # Reapply correct column names
   colnames(cont_vars_summary) <- group_var_labs
