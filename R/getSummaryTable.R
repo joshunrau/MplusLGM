@@ -76,6 +76,8 @@ getSummaryTable <- function(
   if (!is.null(list_labels)) {
     lab_indices <- match(all_continuous, list_vars)
     rownames(cont_vars_summary) <- list_labels[lab_indices]
+  } else {
+    rownames(cont_vars_summary) <- all_continuous
   }
   
   # Reapply correct column names
