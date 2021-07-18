@@ -25,14 +25,23 @@ plotModel <- function(
   est_means <- model[["results"]][["gh5"]][["means_and_variances_data"]][["y_estimated_means"]][["values"]]
   est_means <- as.data.frame(t(est_means))
   
-  # Get class variable
-  class_vars <- c()
-  for (i in 1:nrow(est_means)) {
-    n_cls <- model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
-    class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
+  # Check if classes are in the model
+  if ('classes' %in% names(model[["results"]][["input"]][["variable"]])) {
+    req_classes <- TRUE
+  } else {
+    req_classes <- FALSE
   }
-  est_means$Class <- class_vars
   
+  # Get class variable if applicable
+  if (req_classes) {
+    class_vars <- c()
+    for (i in 1:nrow(est_means)) {
+      n_cls <- model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
+      class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
+    }
+    est_means$Class <- class_vars
+  }
+
   # Get the timepoints for the plot
   plot_info_split <- stringr::str_split(model[["PLOT"]], "\n")[[1]]
   series_info <-  plot_info_split[[grep('SERIES', plot_info_split)]]
@@ -58,13 +67,26 @@ plotModel <- function(
       names_to = 'Time', 
       values_to = 'Variable') %>%
     plyr::mutate(Time = factor(as.numeric(Time)))
-  est_means_long$Class <- as.factor(est_means_long$Class)
   est_means_long$Time <- as.numeric(levels(est_means_long$Time))[est_means_long$Time]
   
-  # Create plot
-  est_class_means <- ggplot2::ggplot() + 
-    geom_line(data = est_means_long, aes(x = Time, y = Variable, group = Class, color=Class)) + 
-    geom_point(data = est_means_long, aes(x = Time, y = Variable, group = Class, color=Class, shape = Class))
+  # Create plot if classes
+  if (req_classes) {
+    
+    est_means_long$Class <- as.factor(est_means_long$Class)
+    
+    est_class_means <- ggplot2::ggplot() + 
+      geom_line(data = est_means_long, aes(x = Time, y = Variable, 
+                                           group = Class, color=Class)) + 
+      geom_point(data = est_means_long, aes(x = Time, y = Variable, group = Class, 
+                                            color=Class, shape = Class))
+    
+  } else {  # Create plot for no classes (i.e., GCM)
+    
+    est_class_means <- ggplot2::ggplot() + 
+      geom_line(data = est_means_long, aes(x = Time, y = Variable)) + 
+      geom_point(data = est_means_long, aes(x = Time, y = Variable))
+    
+  }
   
   if (!is.null(geom_line2)) {
     est_class_means <- est_class_means + geom_line2
