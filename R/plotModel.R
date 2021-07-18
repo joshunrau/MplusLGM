@@ -106,11 +106,8 @@ plotModel <- function(
       axis.title.x = element_text(vjust = -2),
       plot.caption = element_text(hjust = 0.5, vjust = -2),
       plot.margin = unit(c(.5, 0, .5, .5), "cm"),
-      legend.position="top",
-    ) + 
-    scale_x_continuous(breaks = seq(list_timepoints[[1]], 
-                                    list_timepoints[[length(list_timepoints)]], 
-                                    by = 3))
+      legend.position="top"
+    )
   
   return(est_class_means)
   
