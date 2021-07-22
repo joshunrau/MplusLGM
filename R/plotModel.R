@@ -83,8 +83,8 @@ plotModel <- function(
   } else {  # Create plot for no classes (i.e., GCM)
     
     est_class_means <- ggplot2::ggplot() + 
-      geom_line(data = est_means_long, aes(x = Time, y = Variable)) + 
-      geom_point(data = est_means_long, aes(x = Time, y = Variable))
+      geom_line(data = est_means_long, aes(x = Time, y = Variable, color = 'Estimated Means')) + 
+      geom_point(data = est_means_long, aes(x = Time, y = Variable, color = 'Estimated Means'))
     
   }
   
@@ -100,15 +100,22 @@ plotModel <- function(
     labs(caption = figure_caption) +
     xlab(x_axis_label) +
     ylab(y_axis_label) +
-    theme(
-      text = element_text(size=16),
-      axis.title.y = element_text(vjust = 4),
-      axis.title.x = element_text(vjust = -2),
-      plot.caption = element_text(hjust = 0.5, vjust = -2),
-      plot.margin = unit(c(.5, 0, .5, .5), "cm"),
-      legend.position="top",
+      theme(
+        text = element_text(size=16),
+        axis.title.y = element_text(vjust = 4),
+        axis.title.x = element_text(vjust = -2),
+        plot.caption = element_text(hjust = 0.5, vjust = -2),
+        plot.margin = unit(c(.5, 0, .5, .5), "cm"),
+        legend.position="top"
+        )
+  if (!req_classes) {
+    
+    est_class_means <- est_class_means + theme(
+      legend.title = element_blank()
     )
-  
+    
+  }
+
   return(est_class_means)
   
 }
