@@ -7,18 +7,24 @@
 #'@import tidyverse
 getSummaryTable <- function(
   df, 
-  group_var, 
-  list_vars
+  list_vars,
+  group_var = NULL
   ) {
   
   # Input validation
   stopifnot(
     is.data.frame(df),
-    is.factor(df[,group_var]), 
+    is.factor(df[,group_var]) || is.null(group_var), 
     is.vector(list_vars),
     list_vars %in% colnames(df)
   )
   
+  # If no group variable, we will assign it to be 'overall'
+  if (is.null(group_var)) {
+    sample_label <- paste0('Overall (N=', c(nrow(df)), ')')
+    df$Sample <- factor(rep(sample_label, nrow(df)))
+    group_var <- 'Sample'
+  }
   
   # Create list for all continuous and categorical variables
   all_categorical <- c()
@@ -105,12 +111,12 @@ getSummaryTable <- function(
     
     if (!exists('cat_vars_summary')) {
       
-      cat_vars_summary <- .listTablesToDF(cat_vars_summaries[[v]], group_var, v, final_dataset)
+      cat_vars_summary <- .listTablesToDF(cat_vars_summaries[[v]], group_var, v, df)
       
     } else {
       
       cat_vars_summary <- rbind(cat_vars_summary,
-                                .listTablesToDF(cat_vars_summaries[[v]], group_var, v, final_dataset))
+                                .listTablesToDF(cat_vars_summaries[[v]], group_var, v, df))
       
     }
     
