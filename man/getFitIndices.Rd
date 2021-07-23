@@ -4,15 +4,10 @@
 \alias{getFitIndices}
 \title{getFitIndices}
 \usage{
-getFitIndices(
-  list_models,
-  type_stats = c("Title", "LL", "BIC", "Entropy", "T11_LMR_Value", "T11_LMR_PValue")
-)
+getFitIndices(list_models)
 }
 \arguments{
 \item{list_models}{A list containing MplusObjects}
-
-\item{type_stats}{A character vector containing the statistics to return}
 }
 \value{
 A data frame

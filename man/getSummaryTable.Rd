@@ -4,14 +4,14 @@
 \alias{getSummaryTable}
 \title{getSummaryTable}
 \usage{
-getSummaryTable(df, group_var, list_vars)
+getSummaryTable(df, list_vars, group_var = NULL)
 }
 \arguments{
 \item{df}{A data frame containing all descriptive variables and the grouping variable}
 
-\item{group_var}{A factor defining the grouping variable}
-
 \item{list_vars}{A vector containing the variables to summarize}
+
+\item{group_var}{A factor defining the grouping variable}
 }
 \value{
 A data frame
