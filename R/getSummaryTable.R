@@ -70,7 +70,16 @@ getSummaryTable <- function(df, list_vars, var_labels, group = NA, group.test = 
         new_list[[tab[1 , c]]] <- unlist(group_res)
         
       }
+      
+      else if (colnames(tab)[[c]] == 'Test') {
+        
+        new_list[['Test']] <- tab[2:nrow(tab), c]
+        
+      }
+      
     }
+    
     return(data.frame(new_list))
+    
   }
 }
