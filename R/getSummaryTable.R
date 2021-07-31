@@ -8,7 +8,7 @@
 #'@export
 #'@import tidyverse
 #'@import vtable
-getSummaryTable <- function(df, list_vars, var_labels, group = NA, group.test = FALSE) {
+getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
 
   tab <-  vtable::sumtable(
     data = df,
