@@ -4,14 +4,18 @@
 \alias{getSummaryTable}
 \title{getSummaryTable}
 \usage{
-getSummaryTable(df, list_vars, group_var = NULL)
+getSummaryTable(df, list_vars, var_labels, group = NA, group.test = FALSE)
 }
 \arguments{
 \item{df}{A data frame containing all descriptive variables and the grouping variable}
 
 \item{list_vars}{A vector containing the variables to summarize}
 
-\item{group_var}{A factor defining the grouping variable}
+\item{var_labels}{A vector of labels for all in list_var}
+
+\item{group}{The variable name for grouping}
+
+\item{group.test}{Boolean, specify whether vtable will run ANOVA/ChiSq}
 }
 \value{
 A data frame
