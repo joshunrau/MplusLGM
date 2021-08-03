@@ -40,7 +40,7 @@ getMplusObject <- function(
   classes_polynomial = NULL
   ) {
   
-  # Validate types of inputs (i.e., check for TypeError)
+  # Validate types of inputs
   stopifnot(
     is.data.frame(df), 
     is.character(usevar), 
@@ -53,7 +53,7 @@ getMplusObject <- function(
     is.vector(classes_polynomial) || is.null(classes_polynomial)
     )
     
-  # Validate values of inputs (i.e., check for ValueError)
+  # Validate values of inputs
   stopifnot(
     length(usevar) == length(timepoints), 
     length(idvar) == 1,
@@ -140,7 +140,7 @@ getMplusObject <- function(
 #' Creates the title section of an MplusObject.
 .getTitle <- function(classes, overall_polynomial, model_type, starts, classes_polynomial) {
   
-  model_name <- glue::glue('{model_type}_P{overall_polynomial}_K{classes}_S{starts}')
+  model_name <- paste0(model_type, '_P', overall_polynomial, '_K', classes, '_S', starts)
   
   if (!is.null(classes_polynomial)) {
     model_name <- paste(model_name, glue::glue_collapse(classes_polynomial), sep = '_')

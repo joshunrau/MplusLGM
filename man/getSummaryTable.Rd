@@ -4,7 +4,7 @@
 \alias{getSummaryTable}
 \title{getSummaryTable}
 \usage{
-getSummaryTable(df, list_vars, var_labels, group = NA, group.test = FALSE)
+getSummaryTable(df, list_vars, var_labels = NA, group = NA, group.test = FALSE)
 }
 \arguments{
 \item{df}{A data frame containing all descriptive variables and the grouping variable}

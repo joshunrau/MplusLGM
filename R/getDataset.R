@@ -16,9 +16,8 @@ getDataset <- function(model, df, idvar) {
   class_vars <- c()
   for (i in 1:max(C)) {
     n_cls <- model[["results"]][["class_counts"]][["mostLikely"]][["count"]][[i]]
-    class_vars <- c(class_vars, glue::glue('{i} (N={n_cls})'))
+    class_vars <- c(class_vars, paste0(i, ' (N=', n_cls, ')'))
   }
-  
   
   C <- as.factor(C)
   levels(C) <- class_vars

@@ -4,7 +4,6 @@
 #' @return A data frame
 #' @export
 #' @import MplusAutomation
-#' @import stringr
 getFitIndices <- function(list_models) {
   
   # Iterate through all models in list to extract results from path
@@ -16,7 +15,7 @@ getFitIndices <- function(list_models) {
     
     # Get the filepath of this model's output
     path_datafile <- model[["results"]][["input"]][["data"]][["file"]]
-    path_dir <- stringr::str_remove(path_datafile, ".dat")
+    path_datafile <- strsplit(path_datafile, '.dat')[[1]]
     path_out <- paste0(path_dir, '.out')
     
     # Read this model and append it to list
