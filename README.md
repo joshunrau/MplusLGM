@@ -17,7 +17,7 @@ BiocManager::install("rhdf5")
       
 Then, you can install this package as follows:
     
-    devtools::install_github("joshunrau/MplusMixtures")
+    devtools::install_github("joshunrau/MplusLGM")
 
 ## Example:
 
@@ -31,7 +31,7 @@ and including month 3.
 
 Load this package and hypothetical data into R:
 
-    library(MplusMixtures)
+    library(MplusLGM)
     data("Diagnoses")
     
 If desired, we can examine the symptom variables by diagnosis:
@@ -78,7 +78,7 @@ the results from all models run. To see the fit indices associated with these mo
 you can use the getFitIndices function:
 
 ```
-gbtm_model_fit <- getFitIndices(gbtm_models)
+getFitIndices(gbtm_models)
 ```
 
 ```
@@ -123,7 +123,7 @@ As before, we can examine the fit indices of these models fit (and the reference
 model) as follows:
 
 ```
-lcga_model_fit <- getFitIndices(lcga_models)
+getFitIndices(lcga_models)
 ```
 
 ```
@@ -166,46 +166,33 @@ Finally, we can plot the final model:
     
 For users familiar with R, it is possible to pass additional geoms as arguments to plotModel. For example, here we can plot the observed means against the final model:
 
-    # Get actual class means at all timepoints observed
-    sx_means <- final_dataset %>%
-      group_by(Class) %>% 
-      summarise_at(vars(colnames(final_dataset)[3:9]), mean, na.rm = TRUE)
-
-    # Rename symptom variables as numbers
-    sx_timepoints <- parse_number(colnames(final_dataset[3:9]))
-    colnames(sx_means) <- c('Class', parse_number(colnames(final_dataset[3:9])))
-
-    # Convert to long form
-    sx_means_long <- sx_means %>% 
-      pivot_longer(
-        cols = 2:8, 
-        names_to = "Month", values_to = "Symptoms") %>%
-      mutate(Month = factor(as.numeric(Month)))
-    sx_means_long$Month <- as.numeric(levels(sx_means_long$Month))[sx_means_long$Month]
-
-    # Create geom for line
-    sx_line <- geom_line(
-      data = sx_means_long, 
-      aes(Month, y = Symptoms, group = Class, color=Class), 
-      linetype = 'dashed'
+    # Get means as long form
+    class_means <- getLongMeans(
+      df = final_dataset,
+      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3', 'sx_6', 'sx_9', 'sx_12'),
+      timepoints = c(0, 1, 2 , 3, 6, 9, 12),
+      group_var = 'Class'
     )
 
-    # Create geom for points
-    sx_point <- geom_point(
-      data = sx_means_long, 
-      aes(Month, y = Symptoms, group = Class, color=Class, shape = Class)
-      )
+    # Create line for observed symptoms
+    line2 <- geom_line(
+      data = class_means, 
+      aes(x = Time, y = Variable, group = Class, color=Class), 
+      linetype = 'dashed')
+
+    # Create points for observed symptoms
+    point2 <- geom_point(
+      data = class_means, 
+      aes(x = Time, y = Variable, group = Class, color=Class, shape = Class)
+    )
 
 
-    # Pass geoms to the plotModel function
-    my_plot <- plotModel(
+    # Plot final model with additional geoms for observed means
+    plotModel(
       model = final_model, 
       x_axis_label = 'Month', 
       y_axis_label = 'Symptoms', 
-      figure_caption = 'Symptom Levels by Class',
-      geom_line2 = sx_line,
-      geom_point2 = sx_point
-      )
-     
-     # Specify scale for asthetics
-     my_plot + scale_x_continuous(breaks = seq(0, 12, by = 3))
+      geom_line2 = line2,
+      geom_point2 = point2) + 
+      scale_x_continuous(breaks = seq(0, 12, by = 3)) # Specify scale for asthetics
+  
