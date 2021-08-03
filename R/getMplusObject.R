@@ -24,9 +24,9 @@
 #'     getMplusObject to specify the growth factors to estimate for each class
 #' @return An MplusObject
 #' @export
-#' @import MplusAutomation
 #' @import tidyverse
-#' @import glue
+#' @importFrom MplusAutomation MplusObject
+#' @importFrom glue glue glue_collapse
 #' @importFrom parallel detectCores
 getMplusObject <- function(
   df, 
@@ -118,7 +118,7 @@ getMplusObject <- function(
 
 
 #' Coerces character vector into a single element, removing non-character 
-#' elements, and joining elements of type character by nnewline character, 
+#' elements, and joining elements of type character by newline character, 
 .createCommand <- function(old_vector) {
   
   # Initiate new vector to contain character elements of old vector
