@@ -7,6 +7,7 @@
 #'     to the elements in the usevar vector
 #' @param working_dir The directory where the results folder will be created
 #' @return An MplusObject
+#' @import MplusAutomation
 #' @import tidyverse
 #' @import glue
 #' @export

@@ -25,7 +25,7 @@
 #' @return An MplusObject
 #' @export
 #' @import tidyverse
-#' @importFrom MplusAutomation MplusObject
+#' @import MplusAutomation
 #' @importFrom glue glue glue_collapse
 #' @importFrom parallel detectCores
 getMplusObject <- function(

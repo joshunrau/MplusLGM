@@ -3,7 +3,7 @@
 #' @param list_models A list containing MplusObjects
 #' @return A data frame
 #' @export
-#' @importFrom MplusAutomation readModels SummaryTable
+#' @import MplusAutomation
 getFitIndices <- function(list_models) {
   
   # Iterate through all models in list to extract results from path
