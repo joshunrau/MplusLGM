@@ -3,11 +3,11 @@
 \name{.createCommand}
 \alias{.createCommand}
 \title{Coerces character vector into a single element, removing non-character 
-elements, and joining elements of type character by nnewline character,}
+elements, and joining elements of type character by newline character,}
 \usage{
 .createCommand(old_vector)
 }
 \description{
 Coerces character vector into a single element, removing non-character 
-elements, and joining elements of type character by nnewline character,
+elements, and joining elements of type character by newline character,
 }
