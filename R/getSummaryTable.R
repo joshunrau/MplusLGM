@@ -10,7 +10,7 @@
 #'@import vtable
 getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
 
-  tab <-  vtable::sumtable(
+  tab <-  sumtable(
     data = df,
     vars = list_vars,
     labels = var_labels,
