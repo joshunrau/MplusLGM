@@ -7,7 +7,6 @@
 #'@return A data frame
 #'@export
 #'@import tidyverse
-#'@import vtable
 .getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
   
   stopifnot("vtable" %in% rownames(installed.packages()))
