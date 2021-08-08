@@ -2,21 +2,9 @@
 
 ## Installation
 
-If you do not have them installed, you must install the devtools package and the rhdf5 library from bioconductor:
+Installation can be performed using the devtools package:
 
-```
-install.packages("devtools")
-```
-
-```
-if (!requireNamespace("BiocManager", quietly = TRUE))
-    install.packages("BiocManager") 
-    
-BiocManager::install("rhdf5")
-```
-      
-Then, you can install this package as follows:
-    
+    install.packages("devtools")
     devtools::install_github("joshunrau/MplusLGM")
 
 ## Example:
