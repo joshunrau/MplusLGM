@@ -8,6 +8,14 @@ Description: An extension of the MplusAutomation package, MplusLGM is designed t
   facilitate the creation and selection of mixture models with Mplus. This package 
   provides more intuitive methods of interacting with functions provided by MplusAutomation, 
   as well as additional functionality for model selection.
+Depends: R (>= 4.0.0)
+Imports:
+    tidyverse,
+    MplusAutomation,
+    glue,
+    readr,
+    car,
+    parallel
 License: use_mit_license()
 Encoding: UTF-8
 LazyData: true
