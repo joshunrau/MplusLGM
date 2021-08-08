@@ -1,16 +1,15 @@
-#'@title getSummaryTable
-#'@param df A data frame containing all descriptive variables and the grouping variable
-#'@param list_vars A vector containing the variables to summarize
-#'@param var_labels A vector of labels for all in list_var
-#'@param group The variable name for grouping
-#'@param group.test Boolean, specify whether vtable will run ANOVA/ChiSq
-#'@return A data frame
-#'@export
-#'@import tidyverse
-.getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
+#' @title getSummaryTable
+#' @param df A data frame containing all descriptive variables and the grouping variable
+#' @param list_vars A vector containing the variables to summarize
+#' @param var_labels A vector of labels for all in list_var
+#' @param group The variable name for grouping
+#' @param group.test Boolean, specify whether vtable will run ANOVA/ChiSq
+#' @return A data frame
+#' @export
+#' @import tidyverse
+#' @import vtable
+getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
   
-  stopifnot("vtable" %in% rownames(installed.packages()))
-
   tab <- sumtable(
     data = df,
     vars = list_vars,
