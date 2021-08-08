@@ -6,8 +6,8 @@
 #' @param group.test Boolean, specify whether vtable will run ANOVA/ChiSq
 #' @return A data frame
 #' @export
-#' @import tidyverse
 #' @import vtable
+#' @import tidyverse
 getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.test = FALSE) {
   
   tab <- sumtable(
