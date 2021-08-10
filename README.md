@@ -35,17 +35,14 @@ Diagnoses %>% group_by(dx) %>%
     summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
 ```
 ```
-## A tibble: 4 x 8
-## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
-## <chr>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-## Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
-## Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
-## Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
-## Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
+# A tibble: 4 × 8
+  dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
+  <fct>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+1 Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
+2 Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
+3 Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
+4 Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
 ```
-    
-We can see that each diagnosis follows a relatively distinct trend. However, until month 6, diagnoses C and D 
-follow a nearly identical trend. Hence, we will expect a three-class structure to emerge in our model.
     
 ### Step 2A: Fit GBTM Models
 
