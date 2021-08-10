@@ -7,12 +7,15 @@ repository will be installed automatically. However, the rhdf5 package from bioc
 be installed manually.
 
 ```
+# Install devtools from CRAN if not already installed 
 install.packages("devtools")
 
+# Install the bioconductor package manager if required, then the rhdf5 package
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("rhdf5")
 
+# Install the latest version of MplusLGM from this repository
 devtools::install_github("joshunrau/MplusLGM")
 ```
 
@@ -35,15 +38,32 @@ we will expect a three-class structure to emerge in our model.
 # Load required packages
 library(MplusLGM)
 library(tidyverse)
-
+```
+```
 # Load sample dataset from MplusLGM package
 data("Diagnoses")
 
+# Examine the structure of the dataset
+str(Diagnoses)
+
+# 'data.frame':	400 obs. of  11 variables:
+#  $ id   : Factor w/ 400 levels "1","2","3","4",..: 1 2 3 4 5 6 7 8 9 10 ...
+#  $ dx   : Factor w/ 4 levels "Diagnosis A",..: 1 1 1 1 1 1 1 1 1 1 ...
+#  $ sx_0 : int  46 58 38 50 62 NA 41 37 58 52 ...
+#  $ sx_1 : int  36 24 39 48 48 33 38 35 41 42 ...
+#  $ sx_2 : int  20 25 30 NA 27 33 24 24 31 29 ...
+#  $ sx_3 : int  27 30 21 23 17 36 NA 28 19 32 ...
+#  $ sx_6 : int  30 17 22 15 16 21 NA 17 15 17 ...
+#  $ sx_9 : int  18 18 13 9 11 14 8 10 13 15 ...
+#  $ sx_12: int  23 16 15 22 9 14 10 14 14 21 ...
+#  $ age  : num  65.2 42.5 52.5 55.8 44.3 ...
+#  $ sex  : Factor w/ 2 levels "Male","Female": 2 2 2 2 1 1 1 2 1 1 ...
+```
+```
 # Get means for each diagnostic group at variables of interest
 Diagnoses %>% group_by(dx) %>% 
     summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
-```
-```
+
 ### A tibble: 4 × 8
 #   dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
 #   <fct>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
