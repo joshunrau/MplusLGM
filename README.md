@@ -21,7 +21,7 @@ devtools::install_github("joshunrau/MplusLGM")
 
 ## Example:
 
-This example model selection procedure uses a sample dataset of 400 simulated patients with four discrete hypothetical diagnoses. The dataset contains symptoms on an arbitrary scale at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5% of data were deleted completely at random. Here, we will define classes based on symptoms at months 0, 1, 2, 3. 
+This example model selection procedure uses a sample dataset of 400 simulated patients with four discrete hypothetical diagnoses. The dataset contains symptoms on an arbitrary scale at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5% of data were deleted completely at random. Here, we will define classes based on symptoms at months 0, 1, 2, 3. These analyses were performed in R v4.1 and Mplus v8.5 using MplusLGM v0.1, MplusAutomation_1.0.0, and Tidyverse 1.3.1.
 
 ### Step 1: Load the Package and Dataset
 
