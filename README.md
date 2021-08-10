@@ -7,6 +7,7 @@ repository will be installed automatically. However, the rhdf5 package from bioc
 be installed manually.
     
     install.packages("devtools")
+    
     if (!requireNamespace("BiocManager", quietly = TRUE))
         install.packages("BiocManager")
     BiocManager::install("rhdf5")
