@@ -31,8 +31,7 @@ library(tidyverse)
 data("Diagnoses")
 
 # Get means for each diagnostic group at variables of interest
-Diagnoses %>% 
-    group_by(dx) %>% 
+Diagnoses %>% group_by(dx) %>% 
     summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
 ```
 ```
