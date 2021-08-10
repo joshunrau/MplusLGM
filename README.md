@@ -44,13 +44,13 @@ Diagnoses %>% group_by(dx) %>%
     summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
 ```
 ```
-# A tibble: 4 × 8
-  dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
-  <fct>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
-1 Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
-2 Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
-3 Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
-4 Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
+### A tibble: 4 × 8
+#   dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
+#   <fct>       <dbl> <dbl> <dbl> <dbl> <dbl> <dbl> <dbl>
+# 1 Diagnosis A  50.1  39.4  28.5  24.8  20.0  14.1  15.5
+# 2 Diagnosis B  40.4  39.6  39.0  39.9  39.6  39.1  38.8
+# 3 Diagnosis C  13.9  17.8  21.4  23    31.3  35.4  26.0
+# 4 Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
 ```
     
 ### Step 2: Group-Based Trajectory Modeling
@@ -73,11 +73,11 @@ gbtm_models <- fitGBTM(
 getFitIndices(gbtm_models)
 ```
 ```
-               Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
-1  GBTM_P3_K1_S1000  -5933.351 11876.70 11896.66 11901.66      NA            NA             NA
-2  GBTM_P3_K2_S1000  -5240.491 10500.98 10540.90 10550.90   0.995      1340.958         0.0000
-3  GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458         0.0000
-4  GBTM_P3_K4_S1000  -5031.109 10102.22 10182.05 10202.05   0.922        28.777         0.3919
+#                Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
+# 1  GBTM_P3_K1_S1000  -5933.351 11876.70 11896.66 11901.66      NA            NA             NA
+# 2  GBTM_P3_K2_S1000  -5240.491 10500.98 10540.90 10550.90   0.995      1340.958         0.0000
+# 3  GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458         0.0000
+# 4  GBTM_P3_K4_S1000  -5031.109 10102.22 10182.05 10202.05   0.922        28.777         0.3919
 ```
 
 Examining the fit indices from the models run, we will conclude the three-class GBTM best fits the 
@@ -113,16 +113,15 @@ lcga_models <- fitLCGA(
 getFitIndices(lcga_models)
 ```
 ```
-                Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
-1   GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458              0
-2  LCGA1_P3_K3_S1000  -5010.647 10055.30 10123.15 10140.15   0.941       199.766              0
-3  LCGA2_P3_K3_S1000  -5045.855 10127.71 10199.56 10217.56   0.956       328.316              0
-4  LCGA3_P3_K3_S1000  -4995.793 10043.59 10147.36 10173.36   0.956       173.715              0
+#                 Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
+# 1   GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458              0
+# 2  LCGA1_P3_K3_S1000  -5010.647 10055.30 10123.15 10140.15   0.941       199.766              0
+# 3  LCGA2_P3_K3_S1000  -5045.855 10127.71 10199.56 10217.56   0.956       328.316              0
+# 4  LCGA3_P3_K3_S1000  -4995.793 10043.59 10147.36 10173.36   0.956       173.715              0
 ```
 ```
 # Here, we will select the best model based only on the BIC.
 best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
-
 ```
 
 ### Step 4: Refine Polynomial Order
