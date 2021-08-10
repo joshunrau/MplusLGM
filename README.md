@@ -42,7 +42,8 @@ library(tidyverse)
 ```
 # Load sample dataset from MplusLGM package
 data("Diagnoses")
-
+```
+```
 # Examine the structure of the dataset
 str(Diagnoses)
 
