@@ -4,15 +4,13 @@ An extension of the MplusAutomation package, MplusLGM is designed to facilitate 
 
 ## Installation
 
-MplusLGM can be installed directly from GitHub using the devtools package. This will also install
-most dependencies, although the rhdf5 package from bioconductor must be installed manually, as it 
-is not available on the CRAN repository.
+MplusLGM can be installed directly from GitHub using the devtools package. This will also install most dependencies, although the rhdf5 package from Bioconductor must be installed manually, as it is not available on the CRAN repository.
 
 ```
 # Install devtools from CRAN if not already installed 
 install.packages("devtools")
 
-# Install the bioconductor package manager if required, then the rhdf5 package
+# Install the Bioconductor package manager if required, then the rhdf5 package
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 BiocManager::install("rhdf5")
@@ -23,18 +21,11 @@ devtools::install_github("joshunrau/MplusLGM")
 
 ## Example:
 
-This example model selection procedure uses a sample dataset containing four groups 
-of 100 simulated patients with four discrete hypothetical diagnoses. Symptoms on an 
-arbitrary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 
-5% of the data points were deleted completely at random. Here, we will define classes 
-based on symptoms at months 0, 1, 2, 3. 
+This example model selection procedure uses a sample dataset of 400 simulated patients with four discrete hypothetical diagnoses. The dataset contains symptoms on an arbitrary scale at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5% of data were deleted completely at random. Here, we will define classes based on symptoms at months 0, 1, 2, 3. 
 
 ### Step 1: Load the Package and Dataset
 
-First, we will load this package and hypothetical data into R. Then, we can examine the
-symptoms at each timepoint by diagnosis using the dplyr package. Although each diagnosis 
-follows a relatively distinct trend, diagnoses C and D do not diverge until month 6. Hence, 
-we will expect a three-class structure to emerge in our model.
+First, we will load this package and the hypothetical dataset into R. Then, we can examine the symptoms at each month by diagnostic group. Although each diagnosis follows a relatively distinct trend, diagnoses C and D do not diverge until month 6. Hence, we will expect a three-class structure to emerge in our model.
 
 ```
 # Load required packages
@@ -78,10 +69,7 @@ Diagnoses %>% group_by(dx) %>%
     
 ### Step 2: Group-Based Trajectory Modeling
 
-Next, we will use group-based trajectory modeling (GBTM) to determine the optimal 
-class structure for this data. The fitGBTM function can be used to fit GBTM models
-from a minimum to a maximum class. This function returns a list of MplusObjects, the
-fit indices of which can be examined using the getFitIndices function.
+Next, we will use group-based trajectory modeling (GBTM) to determine the optimal class structure for this dataset. The fitGBTM function can be used to fit GBTM models from a minimum to a maximum class. This function returns a list of MplusObjects, the fit indices of which can be examined using the getFitIndices function.
 
 ```
 # Run GBTM models
@@ -103,10 +91,7 @@ getFitIndices(gbtm_models)
 # 4  GBTM_P3_K4_S1000  -5031.109 10102.22 10182.05 10202.05   0.922        28.777         0.3919
 ```
 
-Examining the fit indices from the models run, we will conclude the three-class GBTM best fits the 
-data. Alternatively, we can use the selectBestModel function to select the best model in the list 
-based on a specified method. For example, we can specify to select the model with the best BIC 
-where the LMR-LRT test p-value is significant.
+Examining the fit indices from the models run, we will conclude the three-class GBTM best fits the data. Alternatively, we can use the selectBestModel function to select the best model in the list based on a specified method. For example, we can specify to select the model with the best BIC where the LMR-LRT test p-value is significant.
 
 ```
 best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
@@ -114,14 +99,8 @@ best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
 
 ### Step 3: Examine Alternative Variance Structures
 
-Now, we will examine whether relaxing the assumptions of equal residual variance across 
-classes and time provides a better fit for our data. To that end, we will fit three latent
-class growth analysis (LCGA) models: LCGA1, allowing for residual variance to vary across 
-classes; LCGA2, allowing for residual variance to vary across time; and LCGA3, allowing for 
-residual variance to vary across both time and class. This can be done using the fitLCGA 
-function. We will set the class structure to three, and specify the three-class GBTM model 
-previously fit as the reference model (i.e., it will be included in the list returned by the 
-fitLCGA function, allowing for easier model comparison). 
+Now, we will examine whether relaxing the assumptions of equal residual variance across classes and time provides a better fit for our data. To that end, we will fit three latent class growth analysis (LCGA) models: LCGA1, allowing for residual variance to vary across classes; LCGA2, allowing for residual variance to vary across time; and LCGA3, allowing for residual variance to vary across both time and class. This can be done using the fitLCGA function. We will set the class structure to three, and specify the three-class GBTM model previously fit as the reference model (i.e., it will be included in the list returned by the fitLCGA function, allowing for easier model comparison). 
+
 ```
 # Run LCGA models
 lcga_models <- fitLCGA(
@@ -149,8 +128,7 @@ best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
 ### Step 4: Refine Polynomial Order
 
-Next, we can use the refinePolynomial function to remove insignificant growth factors from
-each class, based on Wald tests.
+Next, we can use the refinePolynomial function to remove insignificant growth factors from each class, based on Wald tests.
 
 ```
 final_model <- refinePolynomial(
@@ -163,10 +141,7 @@ final_model <- refinePolynomial(
    
 ### Step 5: Follow-Up Analyses
 
-Now that we have the final model, we can add the most probable class to each individual in our
-dataset using the getDataset function. The plotModel function can also be used to easily plot our
-model using ggplot2. Here, we wil plot the observed means against the final model by passing additional 
-geoms to ggplot2.
+Now that we have the final model, we can add the most probable class to each individual in our dataset using the getDataset function. The plotModel function can also be used to easily plot our model using ggplot2. Here, we will plot the observed means against the final model by passing additional geoms to ggplot2.
 
 ```
 # Get final dataset based on most probable class membership
