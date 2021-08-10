@@ -159,48 +159,49 @@ final_model <- refinePolynomial(
   idvar = 'id')
 ```
    
-### Step 5: Get Dataset With Class
+### Step 5: Follow-Up Analyses
 
-We can get the dataset with classes included, for further analysis:
+Now that we have the final model, we can add the most probable class to each individual in our
+dataset using the getDataset function. The plotModel function can also be used to easily plot our
+model using ggplot2.
 
-    final_dataset <- getDataset(final_model, Diagnoses, 'id')
-    
+```
+# Get final dataset based on most probable class membership
+final_dataset <- getDataset(final_model, Diagnoses, 'id')
 
-### Step 6: Plot Model
+# Create basic plot
+plotModel(final_model, x_axis_label = 'Month', y_axis_label = 'Symptoms')
+```
 
-Finally, we can plot the final model:
+Users can also plot the observed means against the final model by passing additional 
+geoms to ggplot2.
 
-    plotModel(final_model)
-    
-For users familiar with R, it is possible to pass additional geoms as arguments to plotModel. For example, here we can plot the observed means against the final model:
+```
+# Get means as long form
+class_means <- getLongMeans(
+  df = final_dataset,
+  usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3', 'sx_6', 'sx_9', 'sx_12'),
+  timepoints = c(0, 1, 2 , 3, 6, 9, 12),
+  group_var = 'Class')
 
-    # Get means as long form
-    class_means <- getLongMeans(
-      df = final_dataset,
-      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3', 'sx_6', 'sx_9', 'sx_12'),
-      timepoints = c(0, 1, 2 , 3, 6, 9, 12),
-      group_var = 'Class'
-    )
+# Create line for observed symptoms
+line2 <- geom_line(
+  data = class_means, 
+  aes(x = Time, y = Variable, group = Class, color=Class), 
+  linetype = 'dashed')
 
-    # Create line for observed symptoms
-    line2 <- geom_line(
-      data = class_means, 
-      aes(x = Time, y = Variable, group = Class, color=Class), 
-      linetype = 'dashed')
-
-    # Create points for observed symptoms
-    point2 <- geom_point(
-      data = class_means, 
-      aes(x = Time, y = Variable, group = Class, color=Class, shape = Class)
-    )
+# Create points for observed symptoms
+point2 <- geom_point(
+  data = class_means, 
+  aes(x = Time, y = Variable, group = Class, color=Class, shape = Class))
 
 
-    # Plot final model with additional geoms for observed means
-    plotModel(
-      model = final_model, 
-      x_axis_label = 'Month', 
-      y_axis_label = 'Symptoms', 
-      geom_line2 = line2,
-      geom_point2 = point2) + 
-      scale_x_continuous(breaks = seq(0, 12, by = 3)) # Specify scale for asthetics
-  
+# Plot final model with additional geoms for observed means
+plotModel(
+  model = final_model, 
+  x_axis_label = 'Month', 
+  y_axis_label = 'Symptoms', 
+  geom_line2 = line2,
+  geom_point2 = point2) + 
+  scale_x_continuous(breaks = seq(0, 12, by = 3)) # Specify scale for asthetics
+```
