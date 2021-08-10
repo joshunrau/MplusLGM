@@ -71,30 +71,21 @@ gbtm_models <- fitGBTM(
 getFitIndices(gbtm_models)
 ```
 ```
+               Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
+1  GBTM_P3_K1_S1000  -5933.351 11876.70 11896.66 11901.66      NA            NA             NA
+2  GBTM_P3_K2_S1000  -5240.491 10500.98 10540.90 10550.90   0.995      1340.958         0.0000
+3  GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458         0.0000
+4  GBTM_P3_K4_S1000  -5031.109 10102.22 10182.05 10202.05   0.922        28.777         0.3919
 ```
 
-
-    
-
-
-```
-getFitIndices(gbtm_models)
-```
+Examining the fit indices from the models run, we will conclude the three-class GBTM best fits the 
+data. Alternatively, we can use the selectBestModel function to select the best model in the list 
+based on a specified method. For example, we can specify to select the model with the best BIC 
+where the LMR-LRT test p-value is significant.
 
 ```
-##            Title         BIC    Entropy     T11_LMR_PValue
-## GBTM_P3_K3_S1000    10181.83      0.955             0.0000
-## GBTM_P3_K4_S1000    10182.05      0.922             0.3919
-## GBTM_P3_K2_S1000    10540.90      0.995             0.0000
-## GBTM_P3_K1_S1000    11896.66         NA                 NA
+best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
 ```
- 
-Examining the fit indices from the models run, we will conclude the three-class GBTM 
-best fits the data. Alternatively, we can use the selectBestModel function to select 
-the best model in the list based on a specified method. For example, here we can specify
-to select the model with the best BIC where the LMR-LRT test p-value is significant:
-
-    best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
 
 ### Step 3A: Attempt to Relax Residual Variance Restrictions
 
