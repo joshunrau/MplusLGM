@@ -1,5 +1,7 @@
 # MplusLGM
 
+An extension of the MplusAutomation package, MplusLGM is designed to facilitate the running of mixture mdoels in Mplus. This package provides more intuitive methods of interacting with functions provided by MplusAutomation, as well as additional functionality for model selection.
+
 ## Installation
 
 MplusLGM can be installed directly from GitHub using the devtools package. This will also install
