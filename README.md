@@ -172,6 +172,8 @@ final_dataset <- getDataset(final_model, Diagnoses, 'id')
 # Create basic plot
 plotModel(final_model, x_axis_label = 'Month', y_axis_label = 'Symptoms')
 ```
+![Alt Text](/data/basic_plot.tiff)
+
 
 Users can also plot the observed means against the final model by passing additional 
 geoms to ggplot2.
