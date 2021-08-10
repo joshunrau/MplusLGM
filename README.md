@@ -163,22 +163,13 @@ final_model <- refinePolynomial(
 
 Now that we have the final model, we can add the most probable class to each individual in our
 dataset using the getDataset function. The plotModel function can also be used to easily plot our
-model using ggplot2.
+model using ggplot2. Here, we wil plot the observed means against the final model by passing additional 
+geoms to ggplot2.
 
 ```
 # Get final dataset based on most probable class membership
 final_dataset <- getDataset(final_model, Diagnoses, 'id')
 
-# Create basic plot
-plotModel(final_model, x_axis_label = 'Month', y_axis_label = 'Symptoms')
-```
-![Alt Text](https://github.com/joshunrau/MplusLGM/blob/main/example/basic_plot.png?raw=true)
-
-
-Users can also plot the observed means against the final model by passing additional 
-geoms to ggplot2.
-
-```
 # Get means as long form
 class_means <- getLongMeans(
   df = final_dataset,
@@ -206,4 +197,7 @@ plotModel(
   geom_line2 = line2,
   geom_point2 = point2) + 
   scale_x_continuous(breaks = seq(0, 12, by = 3)) # Specify scale for asthetics
+  
 ```
+
+![Alt Text](https://github.com/joshunrau/MplusLGM/blob/main/example/adv_plot.png?raw=true)
