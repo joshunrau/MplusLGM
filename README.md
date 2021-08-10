@@ -69,7 +69,7 @@ Diagnoses %>% group_by(dx) %>%
     
 ### Step 2: Group-Based Trajectory Modeling
 
-Next, we will use group-based trajectory modeling (GBTM) to determine the optimal class structure for this dataset. The fitGBTM function can be used to fit GBTM models from a minimum to a maximum class. This function returns a list of MplusObjects, the fit indices of which can be examined using the getFitIndices function.
+We will use group-based trajectory modeling (GBTM) to determine the optimal class structure for this dataset. The fitGBTM function can be used to fit GBTM models from a minimum to a maximum class. This function returns a list of MplusObjects, the fit indices of which can be examined using the getFitIndices function.
 
 ```
 # Run GBTM models
