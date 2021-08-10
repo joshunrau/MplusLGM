@@ -9,29 +9,32 @@ Installation can be performed using the devtools package:
 
 ## Example:
 
-Below is an example model selection procedure using a sample dataset containing four groups 
-of 100 simulated patients with four discrete hypothetical diagnoses. In the dataset, symptoms 
-on an arbitrary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 5%
-of the data points were deleted MCAR. Here, we will define classes based on measurements up to 
-and including month 3.
+This example model selection procedure uses a sample dataset containing four groups 
+of 100 simulated patients with four discrete hypothetical diagnoses. Symptoms on an 
+arbitrary scale are measured at months 0, 1, 2, 3, 6, 9, and 12. For testing purposes, 
+5% of the data points were deleted completely at random. Here, we will define classes 
+based on symptoms at months 0, 1, 2, 3. 
 
 ### Step 1: Load the Package and Dataset
 
-Load this package and hypothetical data into R:
-
-    library(MplusLGM)
-    data("Diagnoses")
-    
-If desired, we can examine the symptom variables by diagnosis:
+First, we will load this package and hypothetical data into R. Then, we can examine the
+symptoms at each timepoint by diagnosis using the dplyr package. Although each diagnosis 
+follows a relatively distinct trend, diagnoses C and D do not diverge until month 6. Hence, 
+we will expect a three-class structure to emerge in our model.
 
 ```
+# Load required packages
+library(MplusLGM)
 library(tidyverse)
 
-Diagnoses %>%
-  group_by(dx) %>% 
-  summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
-```
+# Load sample dataset from MplusLGM package
+data("Diagnoses")
 
+# Get means for each diagnostic group at variables of interest
+Diagnoses %>% 
+    group_by(dx) %>% 
+    summarise_at(vars(colnames(Diagnoses)[3:9]), mean, na.rm = TRUE)
+```
 ```
 ## A tibble: 4 x 8
 ## dx           sx_0  sx_1  sx_2  sx_3  sx_6  sx_9 sx_12
