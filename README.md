@@ -2,9 +2,15 @@
 
 ## Installation
 
-Installation can be performed using the devtools package:
-
+Installation can be performed using the devtools package. Dependencies availible in the CRAN
+repository will be installed automatically. However, the rhdf5 package from bioconductor must
+be installed manually.
+    
     install.packages("devtools")
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("rhdf5")
+    
     devtools::install_github("joshunrau/MplusLGM")
 
 ## Example:
@@ -44,25 +50,31 @@ Diagnoses %>% group_by(dx) %>%
 4 Diagnosis D  13.9  17.6  21.1  22.7  30.8  40.8  50  
 ```
     
-### Step 2A: Fit GBTM Models
+### Step 2: Group-Based Trajectory Modeling
 
-First, we will fit GBTM models from a minimum class to a maximum class using the 
-fitGBTM function. Given what we know about the dataset, we will assume a maximum 
-class structure of four:
+Next, we will use group-based trajectory modeling (GBTM) to determine the optimal 
+class structure for this data. The fitGBTM function can be used to fit GBTM models
+from a minimum to a maximum class. This function returns a list of MplusObjects, the
+fit indices of which can be examined using the getFitIndices function.
 
-    gbtm_models <- fitGBTM(
-      df = Diagnoses,
-      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
-      timepoints = c(0, 1, 2, 3),
-      idvar = "id",
-      max_k = 4
-    )
+```
+# Run GBTM models
+gbtm_models <- fitGBTM(
+  df = Diagnoses,
+  usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+  timepoints = c(0, 1, 2, 3),
+  idvar = "id",
+  max_k = 4)
+
+# Examine fit indices
+getFitIndices(gbtm_models)
+```
+```
+```
+
+
     
-### Step 2B: Select the Best-Fitting GBTM Model
-    
-Now, we have a list of MplusObjects in the variable "gbtm_models" which contains
-the results from all models run. To see the fit indices associated with these models,
-you can use the getFitIndices function:
+
 
 ```
 getFitIndices(gbtm_models)
