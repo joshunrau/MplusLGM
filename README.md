@@ -164,8 +164,7 @@ line2 <- geom_line(
 point2 <- geom_point(
   data = class_means, 
   aes(x = Time, y = Variable, group = Class, color=Class, shape = Class))
-
-
+  
 # Plot final model with additional geoms for observed means
 plotModel(
   model = final_model, 
