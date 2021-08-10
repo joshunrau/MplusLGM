@@ -4,10 +4,7 @@ Title: Easily Run Mixture Models in Mplus
 Version: 0.1.0
 Author: Joshua Unrau
 Maintainer: Joshua Unrau <joshua.unrau@mail.mcgill.ca>
-Description: An extension of the MplusAutomation package, MplusLGM is designed to 
-  facilitate the creation and selection of mixture models with Mplus. This package 
-  provides more intuitive methods of interacting with functions provided by MplusAutomation, 
-  as well as additional functionality for model selection.
+Description: An extension of the MplusAutomation package, MplusLGM is designed to facilitate the implementation of mixture models in Mplus. 
 Depends: R (>= 4.0.0)
 Imports:
     tidyverse,
