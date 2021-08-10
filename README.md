@@ -5,14 +5,16 @@
 Installation can be performed using the devtools package. Dependencies availible in the CRAN
 repository will be installed automatically. However, the rhdf5 package from bioconductor must
 be installed manually.
-    
-    install.packages("devtools")
-    
-    if (!requireNamespace("BiocManager", quietly = TRUE))
-        install.packages("BiocManager")
-    BiocManager::install("rhdf5")
-    
-    devtools::install_github("joshunrau/MplusLGM")
+
+```
+install.packages("devtools")
+
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+BiocManager::install("rhdf5")
+
+devtools::install_github("joshunrau/MplusLGM")
+```
 
 ## Example:
 
@@ -87,48 +89,41 @@ where the LMR-LRT test p-value is significant.
 best_gbtm_model <- selectBestModel(gbtm_models, selection_method = "BIC_LRT")
 ```
 
-### Step 3A: Attempt to Relax Residual Variance Restrictions
+### Step 3: Examine Alternative Variance Structures
 
-Next, we will try to relax the assumptions of equal residual variance across classes
-and time intrinsic to GBTM. Hence, we will fit an additional three models: LCGA1, allowing
-for residual variance to vary across classes; LCGA2, allowing for residual variance to 
-vary across time; and LCGA3, allowing for residual variance to vary across both time
-and class. 
-
-This can be done using the fitLCGA function. We will set the class structure to three, 
-and specify the three-class GBTM model previously fit as the reference model (i.e., it will 
-be included in the list returned by the fitLCGA function, allowing for easier model comparison):
-
-    lcga_models <- fitLCGA(
-      df = Diagnoses,
-      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
-      timepoints = c(0, 1, 2, 3),
-      idvar = "id",
-      classes = 3,
-      ref_model = best_gbtm_model
-    )
-
-### Step 3B: Select the Best-Fitting Model for K Classes
-
-As before, we can examine the fit indices of these models fit (and the reference 
-model) as follows:
-
+Now, we will examine whether relaxing the assumptions of equal residual variance across 
+classes and time provides a better fit for our data. To that end, we will fit three latent
+class growth analysis (LCGA) models: LCGA1, allowing for residual variance to vary across 
+classes; LCGA2, allowing for residual variance to vary across time; and LCGA3, allowing for 
+residual variance to vary across both time and class. This can be done using the fitLCGA 
+function. We will set the class structure to three, and specify the three-class GBTM model 
+previously fit as the reference model (i.e., it will be included in the list returned by the 
+fitLCGA function, allowing for easier model comparison). 
 ```
+# Run LCGA models
+lcga_models <- fitLCGA(
+  df = Diagnoses,
+  usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+  timepoints = c(0, 1, 2, 3),
+  idvar = "id",
+  classes = 3,
+  ref_model = best_gbtm_model)
+  
+# Examine fit indices
 getFitIndices(lcga_models)
 ```
+```
+                Title        LL      AIC      BIC     CAIC Entropy T11_LMR_Value T11_LMR_PValue
+1   GBTM_P3_K3_S1000  -5045.978 10121.96 10181.83 10196.83   0.955       376.458              0
+2  LCGA1_P3_K3_S1000  -5010.647 10055.30 10123.15 10140.15   0.941       199.766              0
+3  LCGA2_P3_K3_S1000  -5045.855 10127.71 10199.56 10217.56   0.956       328.316              0
+4  LCGA3_P3_K3_S1000  -4995.793 10043.59 10147.36 10173.36   0.956       173.715              0
+```
+```
+# Here, we will select the best model based only on the BIC.
+best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
 ```
-##             Title         BIC    Entropy     T11_LMR_PValue
-## LCGA1_P3_K3_S1000    10123.15      0.941             0.0000
-## LCGA3_P3_K3_S1000    10147.36      0.956             0.0000
-##  GBTM_P3_K3_S1000    10181.83      0.955             0.0000
-## LCGA2_P3_K3_S1000    10199.56      0.956             0.0000
-```
-
-Similarly, we can use the selectBestModel function to select the best 
-model in the list. For example, here we can do this using only the BIC:
-
-    best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
 ### Step 4: Refine Polynomial Order
 
