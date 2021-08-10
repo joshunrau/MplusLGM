@@ -172,7 +172,7 @@ final_dataset <- getDataset(final_model, Diagnoses, 'id')
 # Create basic plot
 plotModel(final_model, x_axis_label = 'Month', y_axis_label = 'Symptoms')
 ```
-![Alt Text](https://github.com/joshunrau/MplusLGM/blob/main/example/basic_plot.jpg?raw=true)
+![Alt Text](https://github.com/joshunrau/MplusLGM/blob/main/example/basic_plot.png?raw=true)
 
 
 Users can also plot the observed means against the final model by passing additional 
