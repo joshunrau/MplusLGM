@@ -147,15 +147,17 @@ best_bic_model <- selectBestModel(lcga_models, selection_method = "BIC")
 
 ### Step 4: Refine Polynomial Order
 
-We will test the significance of the growth factors for each class in
-the model. This can be done using the refinePolynomial function:
+Next, we can use the refinePolynomial function to remove insignificant growth factors from
+each class, based on Wald tests.
 
-    final_model <- refinePolynomial(
-      model = best_bic_model, 
-      df = Diagnoses, 
-      usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
-      timepoints = c(0, 1, 2, 3),
-      idvar = 'id')
+```
+final_model <- refinePolynomial(
+  model = best_bic_model, 
+  df = Diagnoses, 
+  usevar = c('sx_0', 'sx_1', 'sx_2', 'sx_3'),
+  timepoints = c(0, 1, 2, 3),
+  idvar = 'id')
+```
    
 ### Step 5: Get Dataset With Class
 
