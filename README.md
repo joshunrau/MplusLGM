@@ -2,9 +2,9 @@
 
 ## Installation
 
-MplusLGM and most dependencies can be installed from GitHub using the devtools package. However,
-the rhdf5 package from bioconductor must be installed manually as it is not available on the CRAN
-repository.
+MplusLGM can be installed directly from GitHub using the devtools package. This will also install
+most dependencies, although the rhdf5 package from bioconductor must be installed manually, as it 
+is not available on the CRAN repository.
 
 ```
 # Install devtools from CRAN if not already installed 
