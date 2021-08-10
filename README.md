@@ -197,7 +197,6 @@ plotModel(
   geom_line2 = line2,
   geom_point2 = point2) + 
   scale_x_continuous(breaks = seq(0, 12, by = 3)) # Specify scale for asthetics
-  
 ```
 
 ![Alt Text](https://github.com/joshunrau/MplusLGM/blob/main/example/adv_plot.png?raw=true)
