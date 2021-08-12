@@ -19,7 +19,7 @@ getSummaryTable <- function(df, list_vars, var_labels = NA, group = NA, group.te
     group = group,
     group.test = group.test,
     out = "return",
-    digits = 2
+    digits = 3
   )
   
   
