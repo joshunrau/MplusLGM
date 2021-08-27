@@ -79,21 +79,30 @@ runModel <- function(
     
     print(glue::glue('Begin running model: {model_name}'))
     
-    # Run model and add it to the list of models
-    capture.output(
-      list_log[[count_log]] <- MplusAutomation::mplusModeler(
-        model, 
-        glue::glue('{model_dir}/{model_name_short}.dat'), 
-        glue::glue('{model_dir}/{model_name_short}.inp'), 
-        run = 1,
-        writeData = 'always', 
-        hashfilename = FALSE
-      )
-    )
+    # Specify data file and model output file
+    data_file <- glue::glue('{model_dir}/{model_name_short}.dat')
+    model_file <- glue::glue('{model_dir}/{model_name_short}.inp')
     
+    # Run model and add it to the list of models
+    tryCatch(
+      capture.output(
+        list_log[[count_log]] <- MplusAutomation::mplusModeler(
+          model, 
+          dataout = data_file, 
+          modelout = model_file, 
+          run = 1,
+          writeData = 'always', 
+          hashfilename = FALSE
+        )
+      ), error = function(e) {
+        print(paste0("Data File: ", data_file))
+        print(paste0("Model File: ", model_file))
+        stop(paste('error:', e))
+      }
+    )
+  
     print(glue::glue('Finished running model: {model_name}'))
     print(glue::glue('\n'))
-    
     # If  more than one model in list (i.e., starts != 500, check if replicated)
     if (starts != 500) {
       
