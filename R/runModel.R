@@ -83,6 +83,12 @@ runModel <- function(
     data_file <- glue::glue('{model_dir}/{model_name_short}.dat')
     model_file <- glue::glue('{model_dir}/{model_name_short}.inp')
     
+    # Check line length for Mplus
+    .checkLineLength(model)
+    if (nchar(paste0('FILE = "', model_file, '";')) >= 90) {
+      warning(paste0("Line ", 'FILE = "', model_file, '";', " may exceed 90 characters"))
+    }
+    
     # Run model and add it to the list of models
     tryCatch(
       capture.output(
@@ -168,4 +174,28 @@ runModel <- function(
   }
   
   return(model_dir)
+}
+
+#' Check line length
+.checkLineLength <- function(m) {
+  
+  to_check <-c("TITLE", "DATA", "VARIABLE", "DEFINE", "MONTECARLO", "MODELPOPULATION", 
+               "MODELMISSING",  "ANALYSIS", "MODEL", "MODELINDIRECT", "MODELCONSTRAINT", 
+               "MODELTEST", "MODELPRIORS", "OUTPUT", "SAVEDATA", "PLOT")
+  
+  for (i in to_check) {
+    line_code <- m[[i]]
+    
+    if (is.character(line_code)) {
+      line_code <- strsplit(line_code, "\n")
+      
+      for (j in line_code[[1]]) {
+        
+        if (nchar(j) >= 90) {
+          warning(paste0("Line ", j, " may exceed 90 characters"))
+        }
+        
+      }
+    }
+  }
 }
