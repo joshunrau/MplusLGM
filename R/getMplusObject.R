@@ -66,12 +66,16 @@ getMplusObject <- function(
     length(classes_polynomial) == classes || is.null(classes_polynomial)
     )
   
+  if (length(timepoints) != length(usevar)) {
+    warning("using covariates may cause unexpected errors to occur")
+  }
+  
   # Create MplusObject with utility functions for each section of the input file
   model <- mplusObject(
     TITLE = .getTitle(classes, overall_polynomial, model_type, starts, classes_polynomial),
-    VARIABLE = .getVariable(usevar, idvar, classes),
+    VARIABLE = .getVariable(usevar, idvar, classes, covariates),
     ANALYSIS = .getAnalysis(starts),
-    MODEL = .getModel(usevar, timepoints, overall_polynomial, model_type, classes, classes_polynomial),
+    MODEL = .getModel(usevar, timepoints, overall_polynomial, model_type, classes, classes_polynomial, covariates),
     OUTPUT = .getOutout(),
     PLOT = .getPlot(usevar),
     SAVEDATA = .getSaveData(classes, starts),
@@ -153,8 +157,8 @@ getMplusObject <- function(
 
 
 #' Creates the variable section of an MplusObject.
-.getVariable <- function(usevar, idvar, classes) {
-  
+.getVariable <- function(usevar, idvar, classes, covariates) {
+  usevar <- c(usevar, covariates)
   usevar <- glue::glue('USEVAR = {glue_collapse(.splitLength(usevar), sep = " ")};')
   idvar <- glue::glue('IDVAR = {idvar};')
   classes <- glue::glue('CLASSES = c({classes});')
@@ -176,24 +180,24 @@ getMplusObject <- function(
 
 
 #' Creates the model section of an MplusObject.
-.getModel <- function(usevar, timepoints, overall_polynomial, 
-                      model_type, classes, classes_polynomial) {
+.getModel <- function(usevar, timepoints, overall_polynomial, model_type, 
+                      classes, classes_polynomial, covariates) {
   
   # Calculate overall growth factors
   overall_label <- '%OVERALL%'
   
   if (overall_polynomial == 1) {
-    
+    all_growth_factors <- 'i s'
     overall_growth_factors <- 'i s |'
     restrict_var <- 'i-s@0;'
     
   } else if (overall_polynomial == 2) {
-    
+    all_growth_factors <- 'i s q'
     overall_growth_factors <- 'i s q |'
     restrict_var <- 'i-q@0;'
     
   } else if (overall_polynomial == 3) {
-    
+    all_growth_factors <- 'i s q cub'
     overall_growth_factors <- 'i s q cub |'
     restrict_var <- 'i-cub@0;'
     
@@ -229,6 +233,16 @@ getMplusObject <- function(
     }
   } else {
     allow_rv_time <- NULL
+  }
+  
+  if (!is.null(covariates)) {
+    covSyntax <- c(
+      paste0("c ON ", glue::glue_collapse(covariates, sep = " "), ";"),
+      paste0(all_growth_factors, " ON ", glue::glue_collapse(covariates, sep = " "), ";")
+    )
+    
+  } else {
+    covSyntax <- NULL
   }
   
   # Specify class parameters 
@@ -283,8 +297,9 @@ getMplusObject <- function(
     }
   }
   
-  return(.createCommand(c(overall_label, overall_growth_factors, vars_timepoints, 
-                         restrict_var, restrict_gbtm, allow_rv_time, class_parameters)))
+  return(.createCommand(
+    c(overall_label, overall_growth_factors, vars_timepoints, restrict_var, 
+      restrict_gbtm, allow_rv_time, covSyntax, class_parameters)))
   
 }
 
