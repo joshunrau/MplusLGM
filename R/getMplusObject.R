@@ -238,7 +238,8 @@ getMplusObject <- function(
   if (!is.null(covariates)) {
     covSyntax <- c(
       paste0("c ON ", glue::glue_collapse(covariates, sep = " "), ";"),
-      paste0(all_growth_factors, " ON ", glue::glue_collapse(covariates, sep = " "), ";")
+      # cannot do with lcga
+      # paste0(all_growth_factors, " ON ", glue::glue_collapse(covariates, sep = " "), ";")
     )
     
   } else {
@@ -295,11 +296,17 @@ getMplusObject <- function(
       class_parameters <- c(class_parameters, est_rv_cls)
       
     }
+    
+    if (FALSE) { # !is.null(covariates) - cannot do with LCGA
+      class_parameters <- c(class_parameters,
+        paste0(all_growth_factors, " ON ", glue::glue_collapse(covariates, sep = " "), ";")
+      )
+    }
   }
   
   return(.createCommand(
     c(overall_label, overall_growth_factors, vars_timepoints, restrict_var, 
-      restrict_gbtm, allow_rv_time, covSyntax, class_parameters)))
+      restrict_gbtm, allow_rv_time, covSyntax, "", class_parameters)))
   
 }
 
