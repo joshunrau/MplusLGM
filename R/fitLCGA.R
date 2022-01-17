@@ -11,6 +11,8 @@
 #'     the overall model (note that only linear, quadratic, and cubic models are 
 #'     supported)
 #' @param ref_model An optional reference model to add to the list returned
+#' @param convariates A character vector containing covariates to be used in Mplus
+#'     for analysis (if any)
 #' @return An MplusObject
 #' @export
 fitLCGA <- function(
@@ -21,7 +23,8 @@ fitLCGA <- function(
   classes, 
   working_dir = getwd(),
   overall_polynomial = 3, 
-  ref_model = NULL
+  ref_model = NULL,
+  covariates = NULL
   ) {
   
   # Initiate list and count
@@ -45,7 +48,8 @@ fitLCGA <- function(
       overall_polynomial, 
       m, 
       working_dir, 
-      4000)
+      4000,
+      covariates)
     
     cnt <- cnt + 1
     

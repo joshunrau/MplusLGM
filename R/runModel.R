@@ -21,6 +21,8 @@
 #'     error
 #' @param classes_polynomial An optional character vector to pass as input to 
 #'     getMplusObject to specify the growth factors to estimate for each class
+#' @param convariates A character vector containing covariates to be used in Mplus
+#'     for analysis (if any)
 #' @return An MplusObject
 #' @export
 #' @import tidyverse
@@ -36,7 +38,8 @@ runModel <- function(
   model_type, 
   working_dir = getwd(), 
   max_starts = 4000, 
-  classes_polynomial = NULL
+  classes_polynomial = NULL,
+  covariates = NULL
   ) {
   
   # Set initial number of starting values at 500
@@ -59,7 +62,8 @@ runModel <- function(
       starts, 
       overall_polynomial, 
       model_type, 
-      classes_polynomial
+      classes_polynomial,
+      covariates
       )
     
     # Create model directory to contain specified model if does not exist

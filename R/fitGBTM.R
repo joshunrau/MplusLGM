@@ -13,6 +13,8 @@
 #' @param overall_polynomial A numeric value representing the polynomial order for 
 #'     the overall model (note that only linear, quadratic, and cubic models are 
 #'     supported)
+#' @param convariates A character vector containing covariates to be used in Mplus
+#'     for analysis (if any)
 #' @return An MplusObject
 #' @export
 fitGBTM <- function(
@@ -23,7 +25,8 @@ fitGBTM <- function(
   working_dir = getwd(),
   min_k = 1, 
   max_k = 6,
-  overall_polynomial = 3
+  overall_polynomial = 3,
+  covariates = NULL
   ) {
   
   # Input validation
@@ -33,7 +36,7 @@ fitGBTM <- function(
   list_gbtm_results <- list()
   for (k in min_k:max_k) {
     list_gbtm_results[[k]] <- runModel(
-      df, usevar, timepoints, idvar, k, overall_polynomial, 'GBTM', working_dir, 4000)
+      df, usevar, timepoints, idvar, k, overall_polynomial, 'GBTM', working_dir, 4000, NULL, covariates)
   }
   
   return(list_gbtm_results)

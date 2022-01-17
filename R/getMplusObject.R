@@ -22,6 +22,8 @@
 #'     to create (available options are "GBTM", "LCGA1", "LCGA2", and "LCGA3")
 #' @param classes_polynomial An optional character vector to pass as input to 
 #'     getMplusObject to specify the growth factors to estimate for each class
+#' @param convariates A character vector containing covariates to be used in Mplus
+#'     for analysis (if any)
 #' @return An MplusObject
 #' @export
 #' @import tidyverse
@@ -30,14 +32,15 @@
 #' @importFrom parallel detectCores
 getMplusObject <- function(
   df, 
-  usevar, 
+  usevar,
   timepoints, 
   idvar, 
   classes, 
   starts, 
   overall_polynomial, 
   model_type, 
-  classes_polynomial = NULL
+  classes_polynomial = NULL,
+  covariates = NULL
   ) {
   
   # Validate types of inputs
@@ -55,7 +58,6 @@ getMplusObject <- function(
     
   # Validate values of inputs
   stopifnot(
-    length(usevar) == length(timepoints), 
     length(idvar) == 1,
     dplyr::between(classes, 1, 6), 
     dplyr::between(overall_polynomial, 1, 3),
@@ -73,8 +75,8 @@ getMplusObject <- function(
     OUTPUT = .getOutout(),
     PLOT = .getPlot(usevar),
     SAVEDATA = .getSaveData(classes, starts),
-    usevariables = colnames(subset(df, select = c(idvar, usevar))),
-    rdata = subset(df, select = c(idvar, usevar)),
+    usevariables = colnames(subset(df, select = c(idvar, usevar, covariates))),
+    rdata = subset(df, select = c(idvar, usevar, covariates)),
     autov = FALSE)
   
   return(model)
