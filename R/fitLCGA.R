@@ -49,6 +49,7 @@ fitLCGA <- function(
       m, 
       working_dir, 
       4000,
+      NULL,
       covariates)
     
     cnt <- cnt + 1

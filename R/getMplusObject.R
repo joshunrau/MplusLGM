@@ -237,7 +237,7 @@ getMplusObject <- function(
   
   if (!is.null(covariates)) {
     covSyntax <- c(
-      paste0("c ON ", glue::glue_collapse(covariates, sep = " "), ";"),
+      paste0("c ON ", glue::glue_collapse(covariates, sep = " "), ";")
       # cannot do with lcga
       # paste0(all_growth_factors, " ON ", glue::glue_collapse(covariates, sep = " "), ";")
     )
