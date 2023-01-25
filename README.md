@@ -1,3 +1,7 @@
+## :warning: **MplusLGM is not maintained**
+
+This was a project that I created when learning to code as an undergraduate student. The code is of shoddy quality, over-commented, untested, lacking consistent style (although, that is to be expected in R I suppose!), and relies on far too many dependencies (which are unversioned, so this will almost certainly break in the future, if it is not already broken as of January 2023). I have no desire to change this, or ever write any code in R again, so this package is unmaintained. I will leave it up in case it is useful for anyone, although **I strongly recommend anyone considering using this package consider an open-source alternative to Mplus**.
+
 # MplusLGM
 
 An extension of the MplusAutomation package, MplusLGM is designed to facilitate the implementation of mixture models in Mplus. 
